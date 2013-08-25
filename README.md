@@ -1,11 +1,12 @@
 elfinder-2.x-servlet
 ====================
 
-java servlet for elfinder-2.x
+elfinder-2.x-servlet provides a java servlet for elfinder-2.x (thanks for elfinder-1.2-servlet, see also https://github.com/Studio-42/elfinder-servlet)
+
 elfinder is an Open-source file manager for web, written in JavaScript using jQuery and jQuery UI.
 see also http://elfinder.org
 
-in the source codes you downloaded:
+in the zip file you downloaded:
 
 * WebRoot: a normal j2ee application includes elfinder, WEB-INF, jars ...
 * src: source codes for elfinder-servlet
