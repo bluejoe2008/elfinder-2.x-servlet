@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans   
+   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd   
+   http://www.springframework.org/schema/security   
+   http://www.springframework.org/schema/security/spring-security-3.0.xsd
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+	<http auto-config="true" access-denied-page="/common/403.jsp">
+		<!-- intercept-url:拦截器,可以设定哪些路径需要哪些权限来访问. filters=none 不使用过滤,也可以理解为忽略 -->
+		<!-- 
+		<intercept-url pattern="/user/**" access="ROLE_REGISTERED" />
+		<intercept-url pattern="/dbspace/**" access="ROLE_REGISTERED" />
+		<intercept-url pattern="/filespace/**" access="ROLE_REGISTERED" />
+ -->
+		<logout invalidate-session="true" logout-success-url="/logoutSuccess.jsp"
+			logout-url="/j_spring_security_logout" />
+
+		<!-- openid-login always successes because of myUserService -->
+		<openid-login login-page="/login.jsp"
+			authentication-success-handler-ref="successHandler"
+			default-target-url="/user/myspace.jsp">
+			<attribute-exchange>
+				<openid-attribute name="email"
+					type="http://schema.openid.net/contact/email" required="true"
+					count="2" />
+				<openid-attribute name="name"
+					type="http://schema.openid.net/namePerson/friendly" />
+			</attribute-exchange>
+		</openid-login>
+	</http>
+
+	<beans:bean id="successHandler"
+		class="sciuw.security.MyAuthenticationSuccessHandler">
+		<beans:property name="unregisteredView" value="register.jsp" />
+		<beans:property name="registeredView" value="/user/" />
+	</beans:bean>
+
+	<beans:bean id="fileManager" class="sciuw.mvc.beans.impl.LocalFileSpaceManager">
+		<beans:property name="rootDirName" value="/sciuw" />
+	</beans:bean>
+
+	<beans:bean id="dbManager" class="sciuw.mvc.beans.impl.SqlDbSpaceManager">
+		<beans:property name="dataSource" ref="userDataSource" />
+	</beans:bean>
+
+	<beans:bean id="userDataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<beans:property name="driverClassName" value="org.postgresql.Driver" />
+		<beans:property name="url"
+			value="jdbc:postgresql://localhost/sciuw" />
+		<beans:property name="username" value="postgres" />
+		<beans:property name="password" value="1" />
+	</beans:bean>
+
+	<!-- 权限管理操作 -->
+	<authentication-manager>
+		<authentication-provider user-service-ref="myUserService" />
+	</authentication-manager>
+
+	<beans:bean id="myUserService" class="sciuw.security.MyUserService">
+		<beans:property name="dataSource" ref="userDataSource" />
+	</beans:bean>
+
+</beans:beans>  
