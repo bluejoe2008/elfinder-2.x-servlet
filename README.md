@@ -1,10 +1,12 @@
 elfinder-2.x-servlet
 ====================
 
-elfinder-2.x-servlet provides a java servlet for elfinder-2.x (thanks for elfinder-1.2-servlet, see also https://github.com/Studio-42/elfinder-servlet)
+elfinder-2.x-servlet implements a java servlet for elfinder-2.x connector
 
 elfinder is an Open-source file manager for web, written in JavaScript using jQuery and jQuery UI.
 see also http://elfinder.org
+
+for elfinder-1.2 users, please go to https://github.com/Studio-42/elfinder-servlet.
 
 in the zip file you downloaded:
 
