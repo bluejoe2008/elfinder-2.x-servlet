@@ -99,6 +99,11 @@ public class FsItemEx
 		return new FsItemEx(_v.getParent(_f), _s);
 	}
 
+	public String getPath() throws IOException
+	{
+		return _v.getPath(_f);
+	}
+
 	public long getSize()
 	{
 		return _v.getSize(_f);
@@ -107,6 +112,11 @@ public class FsItemEx
 	public String getVolumeId()
 	{
 		return _s.getVolumeId(_v);
+	}
+
+	public String getVolumnName()
+	{
+		return _v.getName();
 	}
 
 	public boolean hasChildFolder()
@@ -162,11 +172,6 @@ public class FsItemEx
 	public void renameTo(FsItemEx dst) throws IOException
 	{
 		_v.rename(_f, dst._f);
-	}
-
-	public String getVolumnName()
-	{
-		return _v.getName();
 	}
 
 }

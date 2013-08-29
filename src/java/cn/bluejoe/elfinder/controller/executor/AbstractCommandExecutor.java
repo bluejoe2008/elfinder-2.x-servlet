@@ -17,6 +17,7 @@ import org.apache.commons.io.IOUtils;
 
 import cn.bluejoe.elfinder.service.FsItem;
 import cn.bluejoe.elfinder.service.FsService;
+import cn.bluejoe.elfinder.util.FsServiceUtils;
 
 public abstract class AbstractCommandExecutor implements CommandExecutor
 {
@@ -117,13 +118,7 @@ public abstract class AbstractCommandExecutor implements CommandExecutor
 
 	protected FsItemEx findItem(FsService fsService, String hash) throws IOException
 	{
-		FsItem fsi = fsService.fromHash(hash);
-		if (fsi == null)
-		{
-			return null;
-		}
-
-		return new FsItemEx(fsi, fsService);
+		return FsServiceUtils.findItem(fsService, hash);
 	}
 
 	protected Map<String, Object> getFsItemInfo(HttpServletRequest request, FsItemEx fsi) throws IOException
