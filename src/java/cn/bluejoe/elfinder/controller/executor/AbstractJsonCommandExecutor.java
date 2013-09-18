@@ -20,7 +20,8 @@ public abstract class AbstractJsonCommandExecutor extends AbstractCommandExecuto
 		try
 		{
 			execute(fsService, request, servletContext, json);
-			response.setContentType("application/json; charset=UTF-8");
+			//response.setContentType("application/json; charset=UTF-8");
+			response.setContentType("text/html; charset=UTF-8");
 
 			PrintWriter writer = response.getWriter();
 			json.write(writer);

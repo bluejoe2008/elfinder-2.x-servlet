@@ -106,8 +106,11 @@ public class ConnectorController
 		List<FileItemStream> listFiles = new ArrayList<FileItemStream>();
 
 		// Parse the request
-		ServletFileUpload upload = new ServletFileUpload();
-		FileItemIterator iter = upload.getItemIterator(request);
+		ServletFileUpload sfu = new ServletFileUpload();
+		String characterEncoding = request.getCharacterEncoding();
+		sfu.setHeaderEncoding(characterEncoding);
+		FileItemIterator iter = sfu.getItemIterator(request);
+
 		while (iter.hasNext())
 		{
 			final FileItemStream item = iter.next();
@@ -115,7 +118,7 @@ public class ConnectorController
 			InputStream stream = item.openStream();
 			if (item.isFormField())
 			{
-				requestParams.put(name, Streams.asString(stream));
+				requestParams.put(name, Streams.asString(stream, characterEncoding));
 			}
 			else
 			{
