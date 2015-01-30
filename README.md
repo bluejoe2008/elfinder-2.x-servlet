@@ -6,6 +6,8 @@ elfinder-2.x-servlet implements a java servlet for elfinder-2.x connector
 elfinder is an Open-source file manager for web, written in JavaScript using jQuery and jQuery UI.
 see also http://elfinder.org
 
+<img src="http://img.blog.csdn.net/20130825231837531">
+
 for elfinder-1.2 users, please go to https://github.com/Studio-42/elfinder-servlet.
 
 in the zip file you downloaded:
