@@ -108,7 +108,10 @@ public class ConnectorController
 		// Parse the request
 		ServletFileUpload sfu = new ServletFileUpload();
 		String characterEncoding = request.getCharacterEncoding();
-		sfu.setHeaderEncoding(characterEncoding);
+		if (characterEncoding == null) {
+			characterEncoding = "UTF-8";
+		}
+        sfu.setHeaderEncoding(characterEncoding);
 		FileItemIterator iter = sfu.getItemIterator(request);
 
 		while (iter.hasNext())
