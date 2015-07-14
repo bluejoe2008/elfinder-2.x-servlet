@@ -12,8 +12,9 @@ for elfinder-1.2 users, please go to https://github.com/Studio-42/elfinder-servl
 
 in the zip file you downloaded:
 
-* WebRoot: a normal j2ee application includes elfinder, WEB-INF, jars ...
-* src: source codes for elfinder-servlet
+* src/main/webapp : a normal j2ee application includes elfinder, WEB-INF...
+* src/main/java: source codes for elfinder-servlet
+* src/main/resources: source codes for elfinder-servlet
 
 just use following codes to tell elfinder to connect with server-side servlet:
 
