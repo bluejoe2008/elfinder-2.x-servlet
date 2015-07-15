@@ -16,6 +16,14 @@ in the zip file you downloaded:
 * src/main/java: source codes for elfinder-servlet
 * src/main/resources: source codes for elfinder-servlet
 
+To build this project with maven run:
+
+    mvn install
+
+to run this project within a jetty container use:
+
+    mvn jetty:run
+
 just use following codes to tell elfinder to connect with server-side servlet:
 
 		<script type="text/javascript" charset="utf-8">
