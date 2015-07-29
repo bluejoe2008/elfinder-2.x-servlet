@@ -163,10 +163,10 @@ public abstract class AbstractCommandExecutor implements CommandExecutor
 		return disp;
 	}
 
-	protected Map<String, Object> getOptions(HttpServletRequest request, FsItemEx cwd)
+	protected Map<String, Object> getOptions(HttpServletRequest request, FsItemEx cwd) throws IOException
 	{
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("path", cwd.getName());
+		map.put("path", cwd.getPath());
 		map.put("disabled", new String[0]);
 		map.put("separator", "/");
 		map.put("copyOverwrite", 1);
