@@ -29,7 +29,13 @@ public class FsItemEx
 	{
 		_v = parent._v;
 		_s = parent._s;
-		_f = _v.fromPath(_v.getPath(parent._f) + "/" + name);
+		// Directories may already have a trailing slash on them so we make sure we don't double up
+		String path = _v.getPath(parent._f);
+		if (!path.endsWith("/")) {
+			path = path + "/";
+		}
+		path = path + name;
+		_f = _v.fromPath(path);
 	}
 
 	public FsItemEx createChild(String name) throws IOException
