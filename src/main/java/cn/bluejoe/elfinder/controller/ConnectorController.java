@@ -57,6 +57,7 @@ public class ConnectorController
 
 		if (ce == null)
 		{
+			// This shouldn't happen as we should have a fallback command set.
 			throw new FsException(String.format("unknown command: %s", cmd));
 		}
 

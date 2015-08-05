@@ -6,6 +6,8 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import cn.bluejoe.elfinder.controller.ErrorException;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import cn.bluejoe.elfinder.service.FsService;
@@ -20,6 +22,31 @@ public abstract class AbstractJsonCommandExecutor extends AbstractCommandExecuto
 		try
 		{
 			execute(fsService, request, servletContext, json);
+		}
+		catch (ErrorException e)
+		{
+			if (e.getArgs() == null || e.getArgs().length == 0)
+			{
+				json.put("error", e.getError());
+			}
+			else
+			{
+				JSONArray errors = new JSONArray();
+				errors.put(e.getError());
+				for (String arg: e.getArgs())
+				{
+					errors.put(arg);
+				}
+				json.put("error", errors);
+			}
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			json.put("error", e.getMessage());
+		}
+		finally
+		{
 			//response.setContentType("application/json; charset=UTF-8");
 			response.setContentType("text/html; charset=UTF-8");
 
@@ -27,11 +54,6 @@ public abstract class AbstractJsonCommandExecutor extends AbstractCommandExecuto
 			json.write(writer);
 			writer.flush();
 			writer.close();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			json.put("error", e.getMessage());
 		}
 	}
 

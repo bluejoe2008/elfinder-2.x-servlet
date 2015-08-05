@@ -8,6 +8,8 @@ public class DefaultCommandExecutorFactory implements CommandExecutorFactory
 
 	private Map<String, CommandExecutor> _map;
 
+	private CommandExecutor _fallbackCommand;
+
 	@Override
 	public CommandExecutor get(String commandName)
 	{
@@ -23,7 +25,7 @@ public class DefaultCommandExecutorFactory implements CommandExecutorFactory
 		catch (Exception e)
 		{
 			//not found
-			return null;
+			return _fallbackCommand;
 		}
 	}
 
@@ -37,6 +39,10 @@ public class DefaultCommandExecutorFactory implements CommandExecutorFactory
 		return _map;
 	}
 
+	public CommandExecutor getFallbackCommand() {
+		return _fallbackCommand;
+	}
+
 	public void setClassNamePattern(String classNamePattern)
 	{
 		_classNamePattern = classNamePattern;
@@ -45,5 +51,9 @@ public class DefaultCommandExecutorFactory implements CommandExecutorFactory
 	public void setMap(Map<String, CommandExecutor> map)
 	{
 		_map = map;
+	}
+
+	public void setFallbackCommand(CommandExecutor fallbackCommand) {
+		this._fallbackCommand = fallbackCommand;
 	}
 }
