@@ -18,6 +18,9 @@
 		class="cn.bluejoe.elfinder.controller.executor.DefaultCommandExecutorFactory">
 		<property name="classNamePattern"
 			value="cn.bluejoe.elfinder.controller.executors.%sCommandExecutor" />
+		<property name="fallbackCommand">
+			<bean class="cn.bluejoe.elfinder.controller.executors.MissingCommandExecutor"/>
+		</property>
 		<property name="map">
 			<map>
 			<!-- 
