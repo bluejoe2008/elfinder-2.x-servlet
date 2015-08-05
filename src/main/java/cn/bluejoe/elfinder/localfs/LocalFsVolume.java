@@ -8,6 +8,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -144,9 +146,20 @@ public class LocalFsVolume implements FsVolume
 	}
 
 	@Override
-	public long getSize(FsItem fsi)
+	public long getSize(FsItem fsi) throws IOException
 	{
-		return asFile(fsi).length();
+		if (isFolder(fsi))
+		{
+			// This recursively walks down the tree
+			Path folder = asFile(fsi).toPath();
+			FileSizeFileVisitor visitor = new FileSizeFileVisitor();
+			Files.walkFileTree(folder, visitor);
+			return visitor.getTotalSize();
+		}
+		else
+		{
+			return asFile(fsi).length();
+		}
 	}
 
 	@Override
@@ -230,5 +243,26 @@ public class LocalFsVolume implements FsVolume
 		}
 
 		_rootDir = rootDir;
+	}
+
+	/**
+	 * Used to calculate total file size when walking the tree.
+	 */
+	private static class FileSizeFileVisitor extends SimpleFileVisitor<Path> {
+
+		private long totalSize;
+
+		@Override
+        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException
+		{
+            totalSize += file.toFile().length();
+            return FileVisitResult.CONTINUE;
+        }
+
+		public long getTotalSize()
+		{
+			return totalSize;
+		}
+
 	}
 }

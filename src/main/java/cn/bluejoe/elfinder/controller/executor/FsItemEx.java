@@ -104,7 +104,7 @@ public class FsItemEx
 		return _v.getPath(_f);
 	}
 
-	public long getSize()
+	public long getSize() throws IOException
 	{
 		return _v.getSize(_f);
 	}

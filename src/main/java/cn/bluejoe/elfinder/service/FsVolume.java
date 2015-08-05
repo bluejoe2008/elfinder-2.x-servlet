@@ -34,7 +34,7 @@ public interface FsVolume
 
 	FsItem getRoot();
 
-	long getSize(FsItem fsi);
+	long getSize(FsItem fsi) throws IOException;
 
 	String getThumbnailFileName(FsItem fsi);
 
