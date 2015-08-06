@@ -21,6 +21,12 @@ import org.apache.commons.io.FilenameUtils;
 
 public class LocalFsVolume implements FsVolume
 {
+	@Override
+	public String toString()
+	{
+		return "LocalFsVolume [" + _rootDir + "]";
+	}
+
 	String _name;
 
 	File _rootDir;

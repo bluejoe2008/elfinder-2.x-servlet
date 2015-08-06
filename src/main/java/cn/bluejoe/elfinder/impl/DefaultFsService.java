@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.log4j.Logger;
 
 import cn.bluejoe.elfinder.service.FsItem;
 import cn.bluejoe.elfinder.service.FsSecurityChecker;
@@ -32,7 +33,10 @@ public class DefaultFsService implements FsService
 
 	FsVolume[] _volumes;
 
-	String[][] escapes = { { "+", "_P" }, { "-", "_M" }, { "/", "_S" }, { ".", "_D" }, { "=", "_E" } };
+	// special characters should be encoded, avoid to be processed as a part of
+	// URL
+	String[][] escapes = { { "+", "_P" }, { "-", "_M" }, { "/", "_S" },
+			{ ".", "_D" }, { "=", "_E" } };
 
 	@Override
 	public FsItem fromHash(String hash)
@@ -98,13 +102,15 @@ public class DefaultFsService implements FsService
 		_securityChecker = securityChecker;
 	}
 
-	public void setVolumes(FsVolume[] volumes)
+	public void setVolumes(FsVolume[] volumes) throws IOException
 	{
 		_volumes = volumes;
 		char vid = 'A';
 		for (FsVolume volume : volumes)
 		{
 			_volumeIds.put(volume, "" + vid);
+			Logger.getLogger(this.getClass()).info(
+					String.format("mounted %s: %s", "" + vid, volume));
 			vid++;
 		}
 	}
