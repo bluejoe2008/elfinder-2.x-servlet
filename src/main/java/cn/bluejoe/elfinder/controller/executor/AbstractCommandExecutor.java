@@ -35,7 +35,6 @@ public abstract class AbstractCommandExecutor implements CommandExecutor
 			if (f.isFolder())
 			{
 				map.put(f.getHash(), f);
-				addSubfolders(map, f);
 			}
 		}
 	}
