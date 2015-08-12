@@ -236,6 +236,13 @@ public class LocalFsVolume implements FsVolume
 		asFile(src).renameTo(asFile(dst));
 	}
 
+	@Override
+	public String getURL(FsItem f)
+	{
+		// We are just happy to not supply a custom URL.
+		return null;
+	}
+
 	public void setName(String name)
 	{
 		_name = name;

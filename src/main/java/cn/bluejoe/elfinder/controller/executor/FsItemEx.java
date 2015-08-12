@@ -180,4 +180,7 @@ public class FsItemEx
 		_v.rename(_f, dst._f);
 	}
 
+	public String getURL() {
+		return _v.getURL(_f);
+	}
 }

@@ -170,6 +170,10 @@ public abstract class AbstractCommandExecutor implements CommandExecutor
 		map.put("separator", "/");
 		map.put("copyOverwrite", 1);
 		map.put("archivers", new Object[0]);
+		String url = cwd.getURL();
+		if (url != null) {
+			map.put("url", url);
+		}
 
 		return map;
 	}

@@ -51,4 +51,11 @@ public interface FsVolume
 	OutputStream openOutputStream(FsItem fsi) throws IOException;
 
 	void rename(FsItem src, FsItem dst) throws IOException;
+
+	/**
+	 * Gets the URL for the supplied item.
+	 * @param f The item to get the URL for.
+	 * @return An absolute URL or <code>null</code> if we should not send back a URL.
+	 */
+	String getURL(FsItem f);
 }
