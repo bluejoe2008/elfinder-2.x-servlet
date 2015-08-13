@@ -176,10 +176,14 @@ public abstract class AbstractCommandExecutor implements CommandExecutor
 			info.put("name", fsi.getName());
 			info.put("phash", fsi.getParent().getHash());
 		}
-
 		if (fsi.isFolder())
 		{
 			info.put("dirs", fsi.hasChildFolder() ? 1 : 0);
+		}
+		String url = fsi.getURL();
+		if (url != null)
+		{
+			info.put("url", url);
 		}
 
 		return info;
