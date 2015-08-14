@@ -15,20 +15,24 @@ import org.json.JSONObject;
 import cn.bluejoe.elfinder.controller.executor.AbstractJsonCommandExecutor;
 import cn.bluejoe.elfinder.controller.executor.CommandExecutor;
 import cn.bluejoe.elfinder.controller.executor.FsItemEx;
+import cn.bluejoe.elfinder.service.FsItemFilter;
 import cn.bluejoe.elfinder.service.FsService;
 
-public class UploadCommandExecutor extends AbstractJsonCommandExecutor implements CommandExecutor
+public class UploadCommandExecutor extends AbstractJsonCommandExecutor
+		implements CommandExecutor
 {
 	@Override
-	public void execute(FsService fsService, HttpServletRequest request, ServletContext servletContext, JSONObject json)
-			throws Exception
+	public void execute(FsService fsService, HttpServletRequest request,
+			ServletContext servletContext, JSONObject json) throws Exception
 	{
-		List<FileItemStream> listFiles = (List<FileItemStream>) request.getAttribute(FileItemStream.class.getName());
+		List<FileItemStream> listFiles = (List<FileItemStream>) request
+				.getAttribute(FileItemStream.class.getName());
 		List<FsItemEx> added = new ArrayList<FsItemEx>();
 
 		String target = request.getParameter("target");
 		FsItemEx dir = super.findItem(fsService, target);
 
+		FsItemFilter filter = getRequestedFilter(request);
 		for (FileItemStream fis : listFiles)
 		{
 			String fileName = fis.getName();
@@ -41,7 +45,8 @@ public class UploadCommandExecutor extends AbstractJsonCommandExecutor implement
 			os.close();
 			is.close();
 
-			added.add(newFile);
+			if (filter.accepts(newFile))
+				added.add(newFile);
 		}
 
 		json.put("added", files2JsonArray(request, added));

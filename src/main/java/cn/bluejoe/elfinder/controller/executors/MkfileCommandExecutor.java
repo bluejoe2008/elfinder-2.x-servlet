@@ -8,13 +8,15 @@ import org.json.JSONObject;
 import cn.bluejoe.elfinder.controller.executor.AbstractJsonCommandExecutor;
 import cn.bluejoe.elfinder.controller.executor.CommandExecutor;
 import cn.bluejoe.elfinder.controller.executor.FsItemEx;
+import cn.bluejoe.elfinder.service.FsItemFilter;
 import cn.bluejoe.elfinder.service.FsService;
 
-public class MkfileCommandExecutor extends AbstractJsonCommandExecutor implements CommandExecutor
+public class MkfileCommandExecutor extends AbstractJsonCommandExecutor
+		implements CommandExecutor
 {
 	@Override
-	public void execute(FsService fsService, HttpServletRequest request, ServletContext servletContext, JSONObject json)
-			throws Exception
+	public void execute(FsService fsService, HttpServletRequest request,
+			ServletContext servletContext, JSONObject json) throws Exception
 	{
 		String target = request.getParameter("target");
 		String name = request.getParameter("name");
@@ -22,6 +24,12 @@ public class MkfileCommandExecutor extends AbstractJsonCommandExecutor implement
 		FsItemEx fsi = super.findItem(fsService, target);
 		FsItemEx dir = new FsItemEx(fsi, name);
 		dir.createFile();
-		json.put("added", new Object[] { getFsItemInfo(request, dir) });
+
+		// if the new file is allowed to be display?
+		FsItemFilter filter = getRequestedFilter(request);
+		json.put(
+				"added",
+				filter.accepts(dir) ? new Object[] { getFsItemInfo(request, dir) }
+						: new Object[0]);
 	}
 }

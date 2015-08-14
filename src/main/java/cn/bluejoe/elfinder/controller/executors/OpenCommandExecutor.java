@@ -14,11 +14,12 @@ import cn.bluejoe.elfinder.controller.executor.FsItemEx;
 import cn.bluejoe.elfinder.service.FsService;
 import cn.bluejoe.elfinder.service.FsVolume;
 
-public class OpenCommandExecutor extends AbstractJsonCommandExecutor implements CommandExecutor
+public class OpenCommandExecutor extends AbstractJsonCommandExecutor implements
+		CommandExecutor
 {
 	@Override
-	public void execute(FsService fsService, HttpServletRequest request, ServletContext servletContext, JSONObject json)
-			throws Exception
+	public void execute(FsService fsService, HttpServletRequest request,
+			ServletContext servletContext, JSONObject json) throws Exception
 	{
 		boolean init = request.getParameter("init") != null;
 		boolean tree = request.getParameter("tree") != null;
@@ -43,7 +44,8 @@ public class OpenCommandExecutor extends AbstractJsonCommandExecutor implements 
 
 		FsItemEx cwd = findCwd(fsService, target);
 		files.put(cwd.getHash(), cwd);
-		addChildren(files, cwd);
+		String[] onlyMimes = request.getParameterValues("mimes[]");
+		addChildren(files, cwd, onlyMimes);
 
 		json.put("files", files2JsonArray(request, files.values()));
 		json.put("cwd", getFsItemInfo(request, cwd));

@@ -7,9 +7,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.bluejoe.elfinder.service.FsItem;
+import cn.bluejoe.elfinder.service.FsItemFilter;
 import cn.bluejoe.elfinder.service.FsService;
 import cn.bluejoe.elfinder.service.FsVolume;
 
+/**
+ * FsItemEx is a helper class of a FsItem, A FsItemEx wraps a FsItem and its
+ * context including FsService, FsVolume, etc
+ * 
+ * @author bluejoe
+ *
+ */
 public class FsItemEx
 {
 	private FsItem _f;
@@ -29,9 +37,11 @@ public class FsItemEx
 	{
 		_v = parent._v;
 		_s = parent._s;
-		// Directories may already have a trailing slash on them so we make sure we don't double up
+		// Directories may already have a trailing slash on them so we make sure
+		// we don't double up
 		String path = _v.getPath(parent._f);
-		if (!path.endsWith("/")) {
+		if (!path.endsWith("/"))
+		{
 			path = path + "/";
 		}
 		path = path + name;
@@ -58,8 +68,7 @@ public class FsItemEx
 		if (_v.isFolder(_f))
 		{
 			_v.deleteFolder(_f);
-		}
-		else
+		} else
 		{
 			_v.deleteFile(_f);
 		}
@@ -180,6 +189,20 @@ public class FsItemEx
 		_v.rename(_f, dst._f);
 	}
 
+	public List<FsItemEx> listChildren(FsItemFilter filter)
+	{
+		List<FsItemEx> list = new ArrayList<FsItemEx>();
+		for (FsItem child : _v.listChildren(_f))
+		{
+			FsItemEx childEx = new FsItemEx(child, _s);
+			if (filter.accepts(childEx))
+			{
+				list.add(childEx);
+			}
+		}
+		return list;
+	}
+	
 	public String getURL() {
 		return _v.getURL(_f);
 	}
