@@ -40,11 +40,18 @@ public class FsItemEx
 		// Directories may already have a trailing slash on them so we make sure
 		// we don't double up
 		String path = _v.getPath(parent._f);
-		if (!path.endsWith("/"))
+		if (path != null)
 		{
-			path = path + "/";
+			if (!path.endsWith("/"))
+			{
+				path = path + "/";
+			}
+			path = path + name;
 		}
-		path = path + name;
+		else
+		{
+			path = name;
+		}
 		_f = _v.fromPath(path);
 	}
 
