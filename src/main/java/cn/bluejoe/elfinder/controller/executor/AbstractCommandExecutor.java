@@ -25,9 +25,6 @@ public abstract class AbstractCommandExecutor implements CommandExecutor
 
 	protected FsItemFilter getRequestedFilter(HttpServletRequest request)
 	{
-		//TODO: failed to get onlyMimes in a POST request
-		//UploadCommand
-		
 		String[] onlyMimes = request.getParameterValues("mimes[]");
 		if (onlyMimes == null)
 			return FsItemFilterUtils.FILTER_ALL;

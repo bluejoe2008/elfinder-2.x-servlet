@@ -41,13 +41,13 @@ public class ConnectorController
 	private FsServiceFactory _fsServiceFactory;
 
 	@RequestMapping
-	public void connector(HttpServletRequest request, final HttpServletResponse response) throws IOException
+	public void connector(HttpServletRequest request,
+			final HttpServletResponse response) throws IOException
 	{
 		try
 		{
 			request = parseMultipartContent(request);
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			throw new IOException(e.getMessage());
 		}
@@ -91,14 +91,14 @@ public class ConnectorController
 					return finalRequest.getSession().getServletContext();
 				}
 			});
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			throw new FsException("unknown error", e);
 		}
 	}
 
-	private HttpServletRequest parseMultipartContent(final HttpServletRequest request) throws Exception
+	private HttpServletRequest parseMultipartContent(
+			final HttpServletRequest request) throws Exception
 	{
 		if (!ServletFileUpload.isMultipartContent(request))
 			return request;
@@ -109,10 +109,11 @@ public class ConnectorController
 		// Parse the request
 		ServletFileUpload sfu = new ServletFileUpload();
 		String characterEncoding = request.getCharacterEncoding();
-		if (characterEncoding == null) {
+		if (characterEncoding == null)
+		{
 			characterEncoding = "UTF-8";
 		}
-        sfu.setHeaderEncoding(characterEncoding);
+		sfu.setHeaderEncoding(characterEncoding);
 		FileItemIterator iter = sfu.getItemIterator(request);
 
 		while (iter.hasNext())
@@ -122,9 +123,9 @@ public class ConnectorController
 			InputStream stream = item.openStream();
 			if (item.isFormField())
 			{
-				requestParams.put(name, Streams.asString(stream, characterEncoding));
-			}
-			else
+				requestParams.put(name,
+						Streams.asString(stream, characterEncoding));
+			} else
 			{
 				String fileName = item.getName();
 				if (fileName != null && !"".equals(fileName.trim()))
@@ -134,38 +135,85 @@ public class ConnectorController
 					final byte[] bs = os.toByteArray();
 					stream.close();
 
-					listFiles.add((FileItemStream) Proxy.newProxyInstance(this.getClass().getClassLoader(),
-						new Class[] { FileItemStream.class }, new InvocationHandler()
-						{
-							@Override
-							public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
+					listFiles.add((FileItemStream) Proxy.newProxyInstance(this
+							.getClass().getClassLoader(),
+							new Class[] { FileItemStream.class },
+							new InvocationHandler()
 							{
-								if ("openStream".equals(method.getName()))
+								@Override
+								public Object invoke(Object proxy,
+										Method method, Object[] args)
+										throws Throwable
 								{
-									return new ByteArrayInputStream(bs);
-								}
+									if ("openStream".equals(method.getName()))
+									{
+										return new ByteArrayInputStream(bs);
+									}
 
-								return method.invoke(item, args);
-							}
-						}));
+									return method.invoke(item, args);
+								}
+							}));
 				}
 			}
 		}
 
 		request.setAttribute(FileItemStream.class.getName(), listFiles);
-		return (HttpServletRequest) Proxy.newProxyInstance(this.getClass().getClassLoader(),
-			new Class[] { HttpServletRequest.class }, new InvocationHandler()
-			{
-				@Override
-				public Object invoke(Object arg0, Method arg1, Object[] arg2) throws Throwable
-				{
-					if ("getParameter".equals(arg1.getName()))
-					{
-						return requestParams.get(arg2[0]);
-					}
 
-					return arg1.invoke(request, arg2);
-				}
-			});
+		// 'getParameter()' method can not be called on original request object
+		// after parsing
+		// so we stored the request values and provide a delegate request object
+
+		return (HttpServletRequest) Proxy.newProxyInstance(this.getClass()
+				.getClassLoader(), new Class[] { HttpServletRequest.class },
+				new InvocationHandler()
+				{
+					@Override
+					public Object invoke(Object arg0, Method arg1, Object[] arg2)
+							throws Throwable
+					{
+						// we replace getParameter() and getParameterValues()
+						// methods
+						if ("getParameter".equals(arg1.getName()))
+						{
+							String paramName = (String) arg2[0];
+							return requestParams.get(paramName);
+						}
+
+						if ("getParameterValues".equals(arg1.getName()))
+						{
+							String paramName = (String) arg2[0];
+
+							// normalize name 'key[]' to 'key'
+							if (paramName.endsWith("[]"))
+								paramName = paramName.substring(0,
+										paramName.length() - 2);
+
+							if (requestParams.containsKey(paramName))
+								return new String[] { requestParams
+										.get(paramName) };
+
+							// if contains key[1], key[2]...
+							int i = 0;
+							List<String> paramValues = new ArrayList<String>();
+							while (true)
+							{
+								String name2 = String.format("%s[%d]",
+										paramName, i++);
+								if (requestParams.containsKey(name2))
+								{
+									paramValues.add(requestParams.get(name2));
+								} else
+								{
+									break;
+								}
+							}
+
+							return paramValues.isEmpty() ? new String[0]
+									: paramValues.toArray(new String[0]);
+						}
+
+						return arg1.invoke(request, arg2);
+					}
+				});
 	}
 }
