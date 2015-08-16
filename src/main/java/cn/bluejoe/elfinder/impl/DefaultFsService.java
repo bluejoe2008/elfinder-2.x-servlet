@@ -1,13 +1,18 @@
 package cn.bluejoe.elfinder.impl;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 
+import cn.bluejoe.elfinder.controller.executor.FsItemEx;
 import cn.bluejoe.elfinder.service.FsItem;
+import cn.bluejoe.elfinder.service.FsItemFilter;
 import cn.bluejoe.elfinder.service.FsSecurityChecker;
 import cn.bluejoe.elfinder.service.FsService;
 import cn.bluejoe.elfinder.service.FsServiceConfig;
@@ -113,5 +118,54 @@ public class DefaultFsService implements FsService
 					String.format("mounted %s: %s", "" + vid, volume));
 			vid++;
 		}
+	}
+
+	@Override
+	/**
+	 * find files by name pattern, this provides a simple recursively iteration based method
+	 * lucene engines can be introduced to improve it!
+	 * 
+	 * @param filter
+	 * @return
+	 */
+	public FsItemEx[] find(FsItemFilter filter)
+	{
+		List<FsItemEx> results = new ArrayList<FsItemEx>();
+		for (FsVolume vol : _volumes)
+		{
+			FsItem root = vol.getRoot();
+			results.addAll(findRecursively(filter, root));
+		}
+
+		return results.toArray(new FsItemEx[0]);
+	}
+
+	/**
+	 * find files recursively in specific folder
+	 * 
+	 * @param filter
+	 * @param root
+	 * @return
+	 */
+	private Collection<FsItemEx> findRecursively(FsItemFilter filter,
+			FsItem root)
+	{
+		List<FsItemEx> results = new ArrayList<FsItemEx>();
+		FsVolume vol = root.getVolume();
+		for (FsItem child : vol.listChildren(root))
+		{
+			if (vol.isFolder(child))
+			{
+				results.addAll(findRecursively(filter, child));
+			}
+			else
+			{
+				FsItemEx item = new FsItemEx(child, this);
+				if (filter.accepts(item))
+					results.add(item);
+			}
+		}
+
+		return results;
 	}
 }

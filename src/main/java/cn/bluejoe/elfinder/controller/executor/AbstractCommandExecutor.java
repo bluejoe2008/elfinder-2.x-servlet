@@ -22,7 +22,6 @@ import cn.bluejoe.elfinder.util.FsServiceUtils;
 
 public abstract class AbstractCommandExecutor implements CommandExecutor
 {
-
 	protected FsItemFilter getRequestedFilter(HttpServletRequest request)
 	{
 		String[] onlyMimes = request.getParameterValues("mimes[]");
@@ -59,7 +58,8 @@ public abstract class AbstractCommandExecutor implements CommandExecutor
 		if (src.isFolder())
 		{
 			createAndCopyFolder(src, dst);
-		} else
+		}
+		else
 		{
 			createAndCopyFile(src, dst);
 		}
@@ -86,7 +86,8 @@ public abstract class AbstractCommandExecutor implements CommandExecutor
 			if (c.isFolder())
 			{
 				createAndCopyFolder(c, new FsItemEx(dst, c.getName()));
-			} else
+			}
+			else
 			{
 				createAndCopyFile(c, new FsItemEx(dst, c.getName()));
 			}
@@ -108,6 +109,12 @@ public abstract class AbstractCommandExecutor implements CommandExecutor
 
 	protected Object[] files2JsonArray(HttpServletRequest request,
 			Collection<FsItemEx> list) throws IOException
+	{
+		return files2JsonArray(request, list.toArray(new FsItemEx[0]));
+	}
+
+	protected Object[] files2JsonArray(HttpServletRequest request,
+			FsItemEx[] list) throws IOException
 	{
 		List<Map<String, Object>> los = new ArrayList<Map<String, Object>>();
 		for (FsItemEx fi : list)
@@ -163,7 +170,8 @@ public abstract class AbstractCommandExecutor implements CommandExecutor
 		{
 			info.put("name", fsi.getVolumnName());
 			info.put("volumeid", fsi.getVolumeId());
-		} else
+		}
+		else
 		{
 			info.put("name", fsi.getName());
 			info.put("phash", fsi.getParent().getHash());
