@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
@@ -24,19 +25,7 @@ public class DefaultFsService implements FsService
 
 	FsServiceConfig _serviceConfig;
 
-	public FsServiceConfig getServiceConfig()
-	{
-		return _serviceConfig;
-	}
-
-	public void setServiceConfig(FsServiceConfig serviceConfig)
-	{
-		_serviceConfig = serviceConfig;
-	}
-
-	Map<FsVolume, String> _volumeIds = new HashMap<FsVolume, String>();
-
-	FsVolume[] _volumes;
+	Map<String, FsVolume> _volumeMap = new HashMap<String, FsVolume>();
 
 	// special characters should be encoded, avoid to be processed as a part of
 	// URL
@@ -44,9 +33,58 @@ public class DefaultFsService implements FsService
 			{ ".", "_D" }, { "=", "_E" } };
 
 	@Override
+	/**
+	 * find files by name pattern, this provides a simple recursively iteration based method
+	 * lucene engines can be introduced to improve it!
+	 * 
+	 * @param filter
+	 * @return
+	 */
+	public FsItemEx[] find(FsItemFilter filter)
+	{
+		List<FsItemEx> results = new ArrayList<FsItemEx>();
+		for (FsVolume vol : _volumeMap.values())
+		{
+			FsItem root = vol.getRoot();
+			results.addAll(findRecursively(filter, root));
+		}
+
+		return results.toArray(new FsItemEx[0]);
+	}
+
+	/**
+	 * find files recursively in specific folder
+	 * 
+	 * @param filter
+	 * @param root
+	 * @return
+	 */
+	private Collection<FsItemEx> findRecursively(FsItemFilter filter,
+			FsItem root)
+	{
+		List<FsItemEx> results = new ArrayList<FsItemEx>();
+		FsVolume vol = root.getVolume();
+		for (FsItem child : vol.listChildren(root))
+		{
+			if (vol.isFolder(child))
+			{
+				results.addAll(findRecursively(filter, child));
+			}
+			else
+			{
+				FsItemEx item = new FsItemEx(child, this);
+				if (filter.accepts(item))
+					results.add(item);
+			}
+		}
+
+		return results;
+	}
+
+	@Override
 	public FsItem fromHash(String hash)
 	{
-		for (FsVolume v : _volumes)
+		for (FsVolume v : _volumeMap.values())
 		{
 			String prefix = getVolumeId(v) + "_";
 
@@ -91,15 +129,31 @@ public class DefaultFsService implements FsService
 		return _securityChecker;
 	}
 
+	public FsServiceConfig getServiceConfig()
+	{
+		return _serviceConfig;
+	}
+
 	@Override
 	public String getVolumeId(FsVolume volume)
 	{
-		return _volumeIds.get(volume);
+		for (Entry<String, FsVolume> en : _volumeMap.entrySet())
+		{
+			if (en.getValue() == volume)
+				return en.getKey();
+		}
+
+		return null;
+	}
+
+	public Map<String, FsVolume> getVolumeMap()
+	{
+		return _volumeMap;
 	}
 
 	public FsVolume[] getVolumes()
 	{
-		return _volumes;
+		return _volumeMap.values().toArray(new FsVolume[0]);
 	}
 
 	public void setSecurityChecker(FsSecurityChecker securityChecker)
@@ -107,65 +161,38 @@ public class DefaultFsService implements FsService
 		_securityChecker = securityChecker;
 	}
 
+	public void setServiceConfig(FsServiceConfig serviceConfig)
+	{
+		_serviceConfig = serviceConfig;
+	}
+
+	public void setVolumeMap(Map<String, FsVolume> volumeMap)
+	{
+		this._volumeMap = volumeMap;
+		for (Entry<String, FsVolume> en : _volumeMap.entrySet())
+		{
+			Logger.getLogger(this.getClass())
+					.info(String.format("mounted %s: %s", en.getKey(),
+							en.getValue()));
+		}
+	}
+
+	/**
+	 * @deprecated
+	 * @param volumes
+	 * @throws IOException
+	 */
 	public void setVolumes(FsVolume[] volumes) throws IOException
 	{
-		_volumes = volumes;
+		Logger.getLogger(getClass())
+				.warn("calling setVolumes() is deprecated, please use setVolumeMap() to specify volume id explicitly");
 		char vid = 'A';
 		for (FsVolume volume : volumes)
 		{
-			_volumeIds.put(volume, "" + vid);
+			_volumeMap.put("" + vid, volume);
 			Logger.getLogger(this.getClass()).info(
 					String.format("mounted %s: %s", "" + vid, volume));
 			vid++;
 		}
-	}
-
-	@Override
-	/**
-	 * find files by name pattern, this provides a simple recursively iteration based method
-	 * lucene engines can be introduced to improve it!
-	 * 
-	 * @param filter
-	 * @return
-	 */
-	public FsItemEx[] find(FsItemFilter filter)
-	{
-		List<FsItemEx> results = new ArrayList<FsItemEx>();
-		for (FsVolume vol : _volumes)
-		{
-			FsItem root = vol.getRoot();
-			results.addAll(findRecursively(filter, root));
-		}
-
-		return results.toArray(new FsItemEx[0]);
-	}
-
-	/**
-	 * find files recursively in specific folder
-	 * 
-	 * @param filter
-	 * @param root
-	 * @return
-	 */
-	private Collection<FsItemEx> findRecursively(FsItemFilter filter,
-			FsItem root)
-	{
-		List<FsItemEx> results = new ArrayList<FsItemEx>();
-		FsVolume vol = root.getVolume();
-		for (FsItem child : vol.listChildren(root))
-		{
-			if (vol.isFolder(child))
-			{
-				results.addAll(findRecursively(filter, child));
-			}
-			else
-			{
-				FsItemEx item = new FsItemEx(child, this);
-				if (filter.accepts(item))
-					results.add(item);
-			}
-		}
-
-		return results;
 	}
 }

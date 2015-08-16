@@ -13,21 +13,19 @@
 	<bean
 		class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />
 
-	<!-- find appropriate  command executor for given command-->
+	<!-- find appropriate command executor for given command -->
 	<bean id="commandExecutorFactory"
 		class="cn.bluejoe.elfinder.controller.executor.DefaultCommandExecutorFactory">
 		<property name="classNamePattern"
 			value="cn.bluejoe.elfinder.controller.executors.%sCommandExecutor" />
 		<property name="fallbackCommand">
-			<bean class="cn.bluejoe.elfinder.controller.executors.MissingCommandExecutor"/>
+			<bean
+				class="cn.bluejoe.elfinder.controller.executors.MissingCommandExecutor" />
 		</property>
 		<property name="map">
 			<map>
-			<!-- 
-				<entry key="tree">
-					<bean class="cn.bluejoe.elfinder.controller.executors.TreeCommandExecutor" />
-				</entry>
-			-->
+				<!-- <entry key="tree"> <bean class="cn.bluejoe.elfinder.controller.executors.TreeCommandExecutor" 
+					/> </entry> -->
 			</map>
 		</property>
 	</bean>
@@ -42,19 +40,28 @@
 						<property name="tmbWidth" value="80" />
 					</bean>
 				</property>
-				<property name="volumes">
-					<list>
-						<!-- two volumes are mounted here -->
-						<bean class="cn.bluejoe.elfinder.localfs.LocalFsVolume">
-							<property name="name" value="MyFiles" />
-							<property name="rootDir" value="/tmp/a" />
-						</bean>
-						<bean class="cn.bluejoe.elfinder.localfs.LocalFsVolume">
-							<property name="name" value="Shared" />
-							<property name="rootDir" value="/tmp/b" />
-						</bean>
-					</list>
+				<property name="volumeMap">
+					<!-- two volumes are mounted here -->
+					<map>
+						<entry key="A">
+							<bean class="cn.bluejoe.elfinder.localfs.LocalFsVolume">
+								<property name="name" value="MyFiles" />
+								<property name="rootDir" value="/tmp/a" />
+							</bean>
+						</entry>
+						<entry key="B">
+							<bean class="cn.bluejoe.elfinder.localfs.LocalFsVolume">
+								<property name="name" value="Shared" />
+								<property name="rootDir" value="/tmp/b" />
+							</bean>
+						</entry>
+					</map>
 				</property>
+				<!-- <property name="volumes"> <list> <bean class="cn.bluejoe.elfinder.localfs.LocalFsVolume"> 
+					<property name="name" value="MyFiles" /> <property name="rootDir" value="/tmp/a" 
+					/> </bean> <bean class="cn.bluejoe.elfinder.localfs.LocalFsVolume"> <property 
+					name="name" value="Shared" /> <property name="rootDir" value="/tmp/b" /> 
+					</bean> </list> </property> -->
 				<property name="securityChecker">
 					<bean class="cn.bluejoe.elfinder.impl.FsSecurityCheckerChain">
 						<property name="filterMappings">

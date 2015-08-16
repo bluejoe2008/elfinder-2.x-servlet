@@ -9,12 +9,12 @@ public class LocalFsItem implements FsItem
 {
 	File _file;
 
-	FsVolume _volumn;
+	FsVolume _volume;
 
-	public LocalFsItem(LocalFsVolume volumn, File file)
+	public LocalFsItem(LocalFsVolume volume, File file)
 	{
 		super();
-		_volumn = volumn;
+		_volume = volume;
 		_file = file;
 	}
 
@@ -25,7 +25,7 @@ public class LocalFsItem implements FsItem
 
 	public FsVolume getVolume()
 	{
-		return _volumn;
+		return _volume;
 	}
 
 	public void setFile(File file)
@@ -33,8 +33,8 @@ public class LocalFsItem implements FsItem
 		_file = file;
 	}
 
-	public void setVolumn(FsVolume volumn)
+	public void setVolume(FsVolume volume)
 	{
-		_volumn = volumn;
+		_volume = volume;
 	}
 }

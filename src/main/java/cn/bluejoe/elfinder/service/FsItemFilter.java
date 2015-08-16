@@ -12,6 +12,6 @@ import cn.bluejoe.elfinder.controller.executor.FsItemEx;
 public interface FsItemFilter
 {
 	//TODO: bad designs: FsItemEx should not used here
-	//top level interfaces do not recognize FsItemEx which is a wrapper class
+	//top level interfaces should only know FsItem instead of FsItemEx
 	public boolean accepts(FsItemEx item);
 }

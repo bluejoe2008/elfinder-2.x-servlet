@@ -27,6 +27,6 @@ public interface FsService
 	 */
 
 	// TODO: bad designs: FsItemEx should not used here
-	// top level interfaces do not recognize FsItemEx which is a wrapper class
+	//top level interfaces should only know FsItem instead of FsItemEx
 	FsItemEx[] find(FsItemFilter filter);
 }
