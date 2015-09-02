@@ -48,7 +48,7 @@ public interface FsVolume
 
 	InputStream openInputStream(FsItem fsi) throws IOException;
 
-	OutputStream openOutputStream(FsItem fsi) throws IOException;
+	void writeStream(FsItem f, InputStream is) throws IOException;
 
 	void rename(FsItem src, FsItem dst) throws IOException;
 
@@ -58,4 +58,5 @@ public interface FsVolume
 	 * @return An absolute URL or <code>null</code> if we should not send back a URL.
 	 */
 	String getURL(FsItem f);
+
 }

@@ -39,12 +39,7 @@ public class UploadCommandExecutor extends AbstractJsonCommandExecutor
 			FsItemEx newFile = new FsItemEx(dir, fileName);
 			newFile.createFile();
 			InputStream is = fis.openStream();
-			OutputStream os = newFile.openOutputStream();
-
-			IOUtils.copy(is, os);
-			os.close();
-			is.close();
-
+			newFile.writeStream(is);
 			if (filter.accepts(newFile))
 				added.add(newFile);
 		}
