@@ -24,8 +24,8 @@ public class PasteCommandExecutor extends AbstractJsonCommandExecutor implements
 		String dst = request.getParameter("dst");
 		boolean cut = "1".equals(request.getParameter("cut"));
 
-		List<FsItemEx> added = new ArrayList<FsItemEx>();
-		List<FsItemEx> removed = new ArrayList<FsItemEx>();
+		List<FsItemEx> added = new ArrayList<>();
+		List<String> removed = new ArrayList<>();
 
 		FsItemEx fsrc = super.findItem(fsService, src);
 		FsItemEx fdst = super.findItem(fsService, dst);
@@ -41,11 +41,11 @@ public class PasteCommandExecutor extends AbstractJsonCommandExecutor implements
 			if (cut)
 			{
 				ftgt.delete();
-				removed.add(ftgt);
+				removed.add(target);
 			}
 		}
 
 		json.put("added", files2JsonArray(request, added));
-		json.put("removed", files2JsonArray(request, removed));
+		json.put("removed", removed);
 	}
 }
