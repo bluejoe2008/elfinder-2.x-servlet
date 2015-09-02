@@ -18,6 +18,7 @@ import cn.bluejoe.elfinder.service.FsVolume;
 import cn.bluejoe.elfinder.util.MimeTypesUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 
 public class LocalFsVolume implements FsVolume
 {
@@ -225,9 +226,25 @@ public class LocalFsVolume implements FsVolume
 	}
 
 	@Override
-	public OutputStream openOutputStream(FsItem fsi) throws IOException
+	public void writeStream(FsItem fsi, InputStream is) throws IOException
 	{
-		return new FileOutputStream(asFile(fsi));
+		OutputStream os = null;
+		try
+		{
+			os = new FileOutputStream(asFile(fsi));
+			IOUtils.copy(is, os);
+		}
+		finally
+		{
+			if (is != null)
+			{
+				is.close();
+			}
+			if (os != null)
+			{
+				os.close();
+			}
+		}
 	}
 
 	@Override

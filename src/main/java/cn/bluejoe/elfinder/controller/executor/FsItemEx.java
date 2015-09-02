@@ -179,9 +179,9 @@ public class FsItemEx
 		return _v.openInputStream(_f);
 	}
 
-	public OutputStream openOutputStream() throws IOException
+	public void writeStream(InputStream is) throws IOException
 	{
-		return _v.openOutputStream(_f);
+		_v.writeStream(_f, is);
 	}
 
 	public void renameTo(FsItemEx dst) throws IOException
@@ -206,4 +206,5 @@ public class FsItemEx
 	public String getURL() {
 		return _v.getURL(_f);
 	}
+
 }

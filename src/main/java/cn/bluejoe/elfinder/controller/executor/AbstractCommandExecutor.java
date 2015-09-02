@@ -70,10 +70,7 @@ public abstract class AbstractCommandExecutor implements CommandExecutor
 	{
 		dst.createFile();
 		InputStream is = src.openInputStream();
-		OutputStream os = dst.openOutputStream();
-		IOUtils.copy(is, os);
-		is.close();
-		os.close();
+		dst.writeStream(is);
 	}
 
 	protected void createAndCopyFolder(FsItemEx src, FsItemEx dst)
