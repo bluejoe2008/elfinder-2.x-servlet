@@ -23,7 +23,7 @@ import org.apache.log4j.Logger;
 
 public abstract class AbstractCommandExecutor implements CommandExecutor
 {
-	protected static Logger LOG = Logger.getLogger(AbstractJsonCommandExecutor.class);
+	protected static Logger LOG = Logger.getLogger(AbstractCommandExecutor.class);
 
 	protected FsItemFilter getRequestedFilter(HttpServletRequest request)
 	{
