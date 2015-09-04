@@ -19,9 +19,12 @@ import cn.bluejoe.elfinder.service.FsItemFilter;
 import cn.bluejoe.elfinder.service.FsService;
 import cn.bluejoe.elfinder.util.FsItemFilterUtils;
 import cn.bluejoe.elfinder.util.FsServiceUtils;
+import org.apache.log4j.Logger;
 
 public abstract class AbstractCommandExecutor implements CommandExecutor
 {
+	protected static Logger LOG = Logger.getLogger(AbstractJsonCommandExecutor.class);
+
 	protected FsItemFilter getRequestedFilter(HttpServletRequest request)
 	{
 		String[] onlyMimes = request.getParameterValues("mimes[]");
