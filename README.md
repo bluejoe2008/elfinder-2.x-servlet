@@ -10,7 +10,21 @@ see also http://elfinder.org
 
 for elfinder-1.2 users, please go to https://github.com/Studio-42/elfinder-servlet.
 
-in the zip file you downloaded:
+this project is released as an artifact on the central repostory
+
+use
+
+```
+<dependency>
+    <groupId>com.github.bluejoe2008</groupId>
+    <artifactId>elfinder-servlet-2</artifactId>
+    <version>1.0</version>
+</dependency>
+```
+
+to add dependency in your pom.xml
+
+the source files includes:
 
 * src/main/webapp : a normal j2ee application includes elfinder, WEB-INF...
 * src/main/java: source codes for elfinder-servlet
