@@ -9,8 +9,8 @@
 	<url>https://github.com/bluejoe2008/elfinder-2.x-servlet</url>
 	<licenses>
 		<license>
-			<name>The Apache Software License, Version 2.0</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<name>BSD 2-clause License</name>
+			<url>http://opensource.org/licenses/BSD-2-Clause</url>
 		</license>
 	</licenses>
 	<developers>
