@@ -86,26 +86,28 @@ a sample elfinder-servlet.xml configuration is shown below:
 	<bean id="fsServiceFactory" class="cn.bluejoe.elfinder.impl.StaticFsServiceFactory">
 		<property name="fsService">
 			<bean class="cn.bluejoe.elfinder.impl.DefaultFsService">
-				<!-- settings -->
 				<property name="serviceConfig">
 					<bean class="cn.bluejoe.elfinder.impl.DefaultFsServiceConfig">
 						<property name="tmbWidth" value="80" />
 					</bean>
 				</property>
-				<!-- this FsService serves two volumes -->
-				<property name="volumes">
-					<list>
-						<bean class="cn.bluejoe.elfinder.localfs.LocalFsVolume">
-							<property name="name" value="MyFiles" />
-							<property name="rootDir" value="/tmp/a" />
-						</bean>
-						<bean class="cn.bluejoe.elfinder.localfs.LocalFsVolume">
-							<property name="name" value="Shared" />
-							<property name="rootDir" value="/tmp/b" />
-						</bean>
-					</list>
+				<property name="volumeMap">
+					<!-- two volumes are mounted here -->
+					<map>
+						<entry key="A">
+							<bean class="cn.bluejoe.elfinder.localfs.LocalFsVolume">
+								<property name="name" value="MyFiles" />
+								<property name="rootDir" value="/tmp/a" />
+							</bean>
+						</entry>
+						<entry key="B">
+							<bean class="cn.bluejoe.elfinder.localfs.LocalFsVolume">
+								<property name="name" value="Shared" />
+								<property name="rootDir" value="/tmp/b" />
+							</bean>
+						</entry>
+					</map>
 				</property>
-				<!-- define security checking rules here -->
 				<property name="securityChecker">
 					<bean class="cn.bluejoe.elfinder.impl.FsSecurityCheckerChain">
 						<property name="filterMappings">
