@@ -57,11 +57,20 @@
 						</entry>
 					</map>
 				</property>
-				<!-- <property name="volumes"> <list> <bean class="cn.bluejoe.elfinder.localfs.LocalFsVolume"> 
-					<property name="name" value="MyFiles" /> <property name="rootDir" value="/tmp/a" 
-					/> </bean> <bean class="cn.bluejoe.elfinder.localfs.LocalFsVolume"> <property 
-					name="name" value="Shared" /> <property name="rootDir" value="/tmp/b" /> 
-					</bean> </list> </property> -->
+				<!--
+				<property name="volumes">
+					<list>
+						<bean class="cn.bluejoe.elfinder.localfs.LocalFsVolume"> 
+							<property name="name" value="MyFiles" />
+							<property name="rootDir" value="/tmp/a" />
+						</bean>
+						<bean class="cn.bluejoe.elfinder.localfs.LocalFsVolume">
+							<property name="name" value="Shared" />
+							<property name="rootDir" value="/tmp/b" /> 
+						</bean>
+					</list>
+				</property>
+				-->
 				<property name="securityChecker">
 					<bean class="cn.bluejoe.elfinder.impl.FsSecurityCheckerChain">
 						<property name="filterMappings">
