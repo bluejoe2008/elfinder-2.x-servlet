@@ -14,13 +14,12 @@ this project is released as an artifact on the central repostory
 
 use
 
-```
-<dependency>
-    <groupId>com.github.bluejoe2008</groupId>
-    <artifactId>elfinder-servlet-2</artifactId>
-    <version>1.0</version>
-</dependency>
-```
+
+    <dependency>
+        <groupId>com.github.bluejoe2008</groupId>
+        <artifactId>elfinder-servlet-2</artifactId>
+        <version>1.1</version>
+    </dependency>
 
 to add dependency in your pom.xml
 
@@ -137,3 +136,21 @@ a sample elfinder-servlet.xml configuration is shown below:
 			</bean>
 		</property>
 	</bean>
+	
+
+Making a release
+================
+
+For a developer to make a release they need to have setup an account and with Sonatype and have a PGP key
+for signing the release more details can be found at: http://central.sonatype.org/pages/apache-maven.html
+
+Then to make a release you first tag the version and push this to github:
+
+    mvn release:clean release:prepare
+
+and if everything goes ok you can then release the actual artifact based on the tag:
+
+    mvn release:perform
+
+This will stage the artifacy on the Sonatype servers, once there it will be checked and it it's ok you can
+then release it: http://central.sonatype.org/pages/releasing-the-deployment.html
