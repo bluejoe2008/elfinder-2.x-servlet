@@ -36,9 +36,10 @@ public class DefaultFsService implements FsService
 	/**
 	 * find files by name pattern, this provides a simple recursively iteration based method
 	 * lucene engines can be introduced to improve it!
+	 * This searches across all volumes.
 	 * 
-	 * @param filter
-	 * @return
+	 * @param filter The filter to apply to select files.
+	 * @return A collection of files that match  the filter and gave the root as a parent.
 	 */
 	public FsItemEx[] find(FsItemFilter filter)
 	{
@@ -55,9 +56,9 @@ public class DefaultFsService implements FsService
 	/**
 	 * find files recursively in specific folder
 	 * 
-	 * @param filter
-	 * @param root
-	 * @return
+	 * @param filter The filter to apply to select files.
+	 * @param root The location in the hierarchy to search from.
+	 * @return A collection of files that match the filter and have the root as a parent.
 	 */
 	private Collection<FsItemEx> findRecursively(FsItemFilter filter,
 			FsItem root)
@@ -178,9 +179,9 @@ public class DefaultFsService implements FsService
 	}
 
 	/**
-	 * @deprecated
-	 * @param volumes
-	 * @throws IOException
+	 * @deprecated {@link #setVolumeMap(Map)}
+	 * @param volumes The volumes available.
+	 * @throws IOException If there is a problem with using one of the volumes.
 	 */
 	public void setVolumes(FsVolume[] volumes) throws IOException
 	{

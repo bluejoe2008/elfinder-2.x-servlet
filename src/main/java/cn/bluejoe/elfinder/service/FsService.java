@@ -19,14 +19,13 @@ public interface FsService
 	FsServiceConfig getServiceConfig();
 
 	/**
-	 * find files by name pattern, this is often implemented upon a metadata
-	 * store, or lucene-like search engines
-	 * 
-	 * @param filter
-	 * @return
+	 * find files by name pattern, this provides a simple recursively iteration based method
+	 * lucene engines can be introduced to improve it!
+	 * This searches across all volumes.
+	 *
+	 * @param filter The filter to apply to select files.
+	 * @return A collection of files that match  the filter and gave the root as a parent.
 	 */
-
-	// TODO: bad designs: FsItemEx should not used here
-	//top level interfaces should only know FsItem instead of FsItemEx
+	// TODO: bad designs: FsItemEx should not used here top level interfaces should only know FsItem instead of FsItemEx
 	FsItemEx[] find(FsItemFilter filter);
 }
