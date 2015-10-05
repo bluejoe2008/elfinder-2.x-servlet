@@ -24,7 +24,7 @@
 		<developerConnection>scm:git@github.com:bluejoe2008/elfinder-2.x-servlet.git</developerConnection>
 		<url>git@github.com:bluejoe2008/elfinder-2.x-servlet.git</url>
 	</scm>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.7</maven.compiler.source>
@@ -85,28 +85,6 @@
 	</dependencies>
 	<profiles>
 		<profile>
-			<id>default</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.eclipse.jetty</groupId>
-						<artifactId>jetty-maven-plugin</artifactId>
-						<version>9.2.6.v20141205</version>
-					</plugin>
-					<plugin>
-						<artifactId>maven-war-plugin</artifactId>
-						<version>2.6</version>
-						<configuration>
-							<attachClasses>true</attachClasses>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
 			<id>release</id>
 			<build>
 				<plugins>
@@ -164,4 +142,20 @@
 			</distributionManagement>
 		</profile>
 	</profiles>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-maven-plugin</artifactId>
+				<version>9.2.6.v20141205</version>
+			</plugin>
+			<plugin>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<attachClasses>true</attachClasses>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>
