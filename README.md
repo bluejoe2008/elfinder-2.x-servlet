@@ -62,7 +62,7 @@ in your web.xml, following codes should be added to enable the servlet:
 
 yes! elfinder-2.x-servlet is developed upon SpringFramework (http://springframework.org)
 
-a sample elfinder-servlet.xml configuration is shown below:
+an example elfinder-servlet.xml configuration is shown below:
 
 	<!-- find appropriate  command executor for given command-->
 	<bean id="commandExecutorFactory"
