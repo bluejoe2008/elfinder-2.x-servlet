@@ -10,6 +10,8 @@ see also http://elfinder.org
 
 for elfinder-1.2 users, please go to https://github.com/Studio-42/elfinder-servlet.
 
+importing elfinder-2.x-servlet
+====================
 this project is released as an artifact on the central repostory
 
 use
@@ -23,6 +25,8 @@ use
 
 to add dependency in your pom.xml
 
+building elfinder-2.x-servlet
+====================
 the source files includes:
 
 * src/main/webapp : a normal j2ee application includes elfinder, WEB-INF...
@@ -37,6 +41,8 @@ to run this project within a jetty container use:
 
     mvn jetty:run
 
+using elfinder-2.x-servlet in your web apps
+====================
 just use following codes to tell elfinder to connect with server-side servlet:
 
 		<script type="text/javascript" charset="utf-8">
