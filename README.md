@@ -1,4 +1,4 @@
-elfinder-2.x-servlet
+what's elfinder-2.x-servlet
 ====================
 
 elfinder-2.x-servlet implements a java servlet for elfinder-2.x connector
