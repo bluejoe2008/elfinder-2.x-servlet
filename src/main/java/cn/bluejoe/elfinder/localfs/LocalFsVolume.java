@@ -1,6 +1,5 @@
 package cn.bluejoe.elfinder.localfs;
 
-
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
@@ -8,24 +7,45 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.file.*;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.bluejoe.elfinder.service.FsItem;
-import cn.bluejoe.elfinder.service.FsVolume;
-import cn.bluejoe.elfinder.util.MimeTypesUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 
+import cn.bluejoe.elfinder.service.FsItem;
+import cn.bluejoe.elfinder.service.FsVolume;
+import cn.bluejoe.elfinder.util.MimeTypesUtils;
+
 public class LocalFsVolume implements FsVolume
 {
-	@Override
-	public String toString()
+	/**
+	 * Used to calculate total file size when walking the tree.
+	 */
+	private static class FileSizeFileVisitor extends SimpleFileVisitor<Path>
 	{
-		return "LocalFsVolume [" + _rootDir + "]";
+
+		private long totalSize;
+
+		public long getTotalSize()
+		{
+			return totalSize;
+		}
+
+		@Override
+		public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
+				throws IOException
+		{
+			totalSize += file.toFile().length();
+			return FileVisitResult.CONTINUE;
+		}
+
 	}
 
 	String _name;
@@ -109,7 +129,8 @@ public class LocalFsVolume implements FsVolume
 		if (ext != null && !ext.isEmpty())
 		{
 			String mimeType = MimeTypesUtils.getMimeType(ext);
-			return mimeType == null ? MimeTypesUtils.UNKNOWN_MIME_TYPE : mimeType;
+			return mimeType == null ? MimeTypesUtils.UNKNOWN_MIME_TYPE
+					: mimeType;
 		}
 
 		return MimeTypesUtils.UNKNOWN_MIME_TYPE;
@@ -176,17 +197,25 @@ public class LocalFsVolume implements FsVolume
 	}
 
 	@Override
+	public String getURL(FsItem f)
+	{
+		// We are just happy to not supply a custom URL.
+		return null;
+	}
+
+	@Override
 	public boolean hasChildFolder(FsItem fsi)
 	{
-		return asFile(fsi).isDirectory() && asFile(fsi).listFiles(new FileFilter()
-		{
+		return asFile(fsi).isDirectory()
+				&& asFile(fsi).listFiles(new FileFilter()
+				{
 
-			@Override
-			public boolean accept(File arg0)
-			{
-				return arg0.isDirectory();
-			}
-		}).length > 0;
+					@Override
+					public boolean accept(File arg0)
+					{
+						return arg0.isDirectory();
+					}
+				}).length > 0;
 	}
 
 	@Override
@@ -226,6 +255,33 @@ public class LocalFsVolume implements FsVolume
 	}
 
 	@Override
+	public void rename(FsItem src, FsItem dst) throws IOException
+	{
+		asFile(src).renameTo(asFile(dst));
+	}
+
+	public void setName(String name)
+	{
+		_name = name;
+	}
+
+	public void setRootDir(File rootDir)
+	{
+		if (!rootDir.exists())
+		{
+			rootDir.mkdirs();
+		}
+
+		_rootDir = rootDir;
+	}
+
+	@Override
+	public String toString()
+	{
+		return "LocalFsVolume [" + _rootDir + "]";
+	}
+
+	@Override
 	public void writeStream(FsItem fsi, InputStream is) throws IOException
 	{
 		OutputStream os = null;
@@ -245,54 +301,5 @@ public class LocalFsVolume implements FsVolume
 				os.close();
 			}
 		}
-	}
-
-	@Override
-	public void rename(FsItem src, FsItem dst) throws IOException
-	{
-		asFile(src).renameTo(asFile(dst));
-	}
-
-	@Override
-	public String getURL(FsItem f)
-	{
-		// We are just happy to not supply a custom URL.
-		return null;
-	}
-
-	public void setName(String name)
-	{
-		_name = name;
-	}
-
-	public void setRootDir(File rootDir)
-	{
-		if (!rootDir.exists())
-		{
-			rootDir.mkdirs();
-		}
-
-		_rootDir = rootDir;
-	}
-
-	/**
-	 * Used to calculate total file size when walking the tree.
-	 */
-	private static class FileSizeFileVisitor extends SimpleFileVisitor<Path> {
-
-		private long totalSize;
-
-		@Override
-        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException
-		{
-            totalSize += file.toFile().length();
-            return FileVisitResult.CONTINUE;
-        }
-
-		public long getTotalSize()
-		{
-			return totalSize;
-		}
-
 	}
 }

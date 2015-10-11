@@ -97,6 +97,16 @@ public class ConnectorController
 		}
 	}
 
+	public CommandExecutorFactory getCommandExecutorFactory()
+	{
+		return _commandExecutorFactory;
+	}
+
+	public FsServiceFactory getFsServiceFactory()
+	{
+		return _fsServiceFactory;
+	}
+
 	private HttpServletRequest parseMultipartContent(
 			final HttpServletRequest request) throws Exception
 	{
@@ -215,5 +225,16 @@ public class ConnectorController
 						return arg1.invoke(request, arg2);
 					}
 				});
+	}
+
+	public void setCommandExecutorFactory(
+			CommandExecutorFactory _commandExecutorFactory)
+	{
+		this._commandExecutorFactory = _commandExecutorFactory;
+	}
+
+	public void setFsServiceFactory(FsServiceFactory _fsServiceFactory)
+	{
+		this._fsServiceFactory = _fsServiceFactory;
 	}
 }

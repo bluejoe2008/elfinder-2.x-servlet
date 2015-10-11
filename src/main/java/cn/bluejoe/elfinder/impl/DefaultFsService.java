@@ -12,6 +12,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 
 import cn.bluejoe.elfinder.controller.executor.FsItemEx;
+import cn.bluejoe.elfinder.localfs.LocalFsVolume;
 import cn.bluejoe.elfinder.service.FsItem;
 import cn.bluejoe.elfinder.service.FsItemFilter;
 import cn.bluejoe.elfinder.service.FsSecurityChecker;
@@ -56,9 +57,12 @@ public class DefaultFsService implements FsService
 	/**
 	 * find files recursively in specific folder
 	 * 
-	 * @param filter The filter to apply to select files.
-	 * @param root The location in the hierarchy to search from.
-	 * @return A collection of files that match the filter and have the root as a parent.
+	 * @param filter
+	 *            The filter to apply to select files.
+	 * @param root
+	 *            The location in the hierarchy to search from.
+	 * @return A collection of files that match the filter and have the root as
+	 *         a parent.
 	 */
 	private Collection<FsItemEx> findRecursively(FsItemFilter filter,
 			FsItem root)
@@ -169,19 +173,18 @@ public class DefaultFsService implements FsService
 
 	public void setVolumeMap(Map<String, FsVolume> volumeMap)
 	{
-		this._volumeMap = volumeMap;
-		for (Entry<String, FsVolume> en : _volumeMap.entrySet())
+		for (Entry<String, FsVolume> en : volumeMap.entrySet())
 		{
-			Logger.getLogger(this.getClass())
-					.info(String.format("mounted %s: %s", en.getKey(),
-							en.getValue()));
+			addVolume(en.getKey(), en.getValue());
 		}
 	}
 
 	/**
 	 * @deprecated {@link #setVolumeMap(Map)}
-	 * @param volumes The volumes available.
-	 * @throws IOException If there is a problem with using one of the volumes.
+	 * @param volumes
+	 *            The volumes available.
+	 * @throws IOException
+	 *             If there is a problem with using one of the volumes.
 	 */
 	public void setVolumes(FsVolume[] volumes) throws IOException
 	{
@@ -195,5 +198,12 @@ public class DefaultFsService implements FsService
 					String.format("mounted %s: %s", "" + vid, volume));
 			vid++;
 		}
+	}
+
+	public void addVolume(String name, FsVolume fsVolume)
+	{
+		_volumeMap.put(name, fsVolume);
+		Logger.getLogger(this.getClass()).info(
+				String.format("mounted %s: %s", name, fsVolume));
 	}
 }
