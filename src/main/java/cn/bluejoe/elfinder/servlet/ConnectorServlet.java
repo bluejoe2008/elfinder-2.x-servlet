@@ -24,14 +24,6 @@ public class ConnectorServlet extends HttpServlet
 	//core member of this Servlet
 	ConnectorController _connectorController;
 
-	private LocalFsVolume createLocalFsVolume(String name, File rootDir)
-	{
-		LocalFsVolume localFsVolume = new LocalFsVolume();
-		localFsVolume.setName(name);
-		localFsVolume.setRootDir(rootDir);
-		return localFsVolume;
-	}
-
 	/**
 	 * create a command executor factory
 	 * 
@@ -84,6 +76,14 @@ public class ConnectorServlet extends HttpServlet
 		return fsService;
 	}
 
+	private LocalFsVolume createLocalFsVolume(String name, File rootDir)
+	{
+		LocalFsVolume localFsVolume = new LocalFsVolume();
+		localFsVolume.setName(name);
+		localFsVolume.setRootDir(rootDir);
+		return localFsVolume;
+	}
+
 	/**
 	 * create a service factory
 	 * 
@@ -107,7 +107,7 @@ public class ConnectorServlet extends HttpServlet
 	}
 
 	@Override
-	protected void doPut(HttpServletRequest req, HttpServletResponse resp)
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException
 	{
 		_connectorController.connector(req, resp);
