@@ -24,7 +24,7 @@ public class ConnectorServlet extends HttpServlet
 	//core member of this Servlet
 	ConnectorController _connectorController;
 
-	private LocalFsVolume ceateLocalFsVolume(String name, File rootDir)
+	private LocalFsVolume createLocalFsVolume(String name, File rootDir)
 	{
 		LocalFsVolume localFsVolume = new LocalFsVolume();
 		localFsVolume.setName(name);
