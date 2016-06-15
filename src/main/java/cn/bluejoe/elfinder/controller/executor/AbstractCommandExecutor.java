@@ -206,6 +206,8 @@ public abstract class AbstractCommandExecutor implements CommandExecutor
 		map.put("separator", "/");
 		map.put("copyOverwrite", 1);
 		map.put("archivers", new Object[0]);
+		// Currently we don't support chunked uploads which came in with a newer version of elfinder 2.1
+		map.put("uploadMaxConn", "-1");
 		String url = cwd.getURL();
 		if (url != null)
 		{
