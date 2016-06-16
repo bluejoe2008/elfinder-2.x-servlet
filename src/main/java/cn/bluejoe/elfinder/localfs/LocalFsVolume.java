@@ -14,6 +14,7 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -201,6 +202,12 @@ public class LocalFsVolume implements FsVolume
 	{
 		// We are just happy to not supply a custom URL.
 		return null;
+	}
+
+	@Override
+	public void filterOptions(FsItem f, Map<String, Object> map)
+	{
+		// Don't do anything
 	}
 
 	@Override

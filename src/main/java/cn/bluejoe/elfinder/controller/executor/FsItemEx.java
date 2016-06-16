@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import cn.bluejoe.elfinder.service.FsItem;
 import cn.bluejoe.elfinder.service.FsItemFilter;
@@ -214,4 +215,7 @@ public class FsItemEx
 		return _v.getURL(_f);
 	}
 
+	public void filterOptions(Map<String, Object> map) {
+		_v.filterOptions(_f, map);
+	}
 }
