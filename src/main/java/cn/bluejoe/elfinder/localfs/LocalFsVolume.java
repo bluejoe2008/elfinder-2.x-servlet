@@ -227,7 +227,7 @@ public class LocalFsVolume implements FsVolume
 	@Override
 	public boolean isRoot(FsItem fsi)
 	{
-		return _rootDir == asFile(fsi);
+		return _rootDir.equals(asFile(fsi));
 	}
 
 	@Override
