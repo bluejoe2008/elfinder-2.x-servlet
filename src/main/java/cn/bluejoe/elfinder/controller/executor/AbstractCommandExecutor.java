@@ -3,11 +3,7 @@ package cn.bluejoe.elfinder.controller.executor;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -208,6 +204,8 @@ public abstract class AbstractCommandExecutor implements CommandExecutor
 		map.put("archivers", new Object[0]);
 		// Currently we don't support chunked uploads which came in with a newer version of elfinder 2.1
 		map.put("uploadMaxConn", "-1");
+		// We don't have an implementation of zipdl at the moment.
+		map.put("disabled", Arrays.asList(new String[]{"zipdl"}));
 		String url = cwd.getURL();
 		if (url != null)
 		{
