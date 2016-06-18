@@ -211,6 +211,7 @@ public abstract class AbstractCommandExecutor implements CommandExecutor
 		{
 			map.put("url", url);
 		}
+		cwd.filterOptions(map);
 
 		return map;
 	}

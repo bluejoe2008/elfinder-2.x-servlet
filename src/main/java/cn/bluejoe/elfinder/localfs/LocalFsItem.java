@@ -37,4 +37,10 @@ public class LocalFsItem implements FsItem
 	{
 		_volume = volume;
 	}
+
+	@Override
+	public String toString()
+	{
+		return "LocalFsVolume [" + _file + "]";
+	}
 }
