@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.bluejoe2008</groupId>
 	<artifactId>elfinder-servlet-2</artifactId>
-	<version>1.2</version>
+	<version>1.3-SNAPSHOT</version>
 	<name>elfinder-servlet-2</name>
 	<description>Java backend for "elFinder".</description>
 	<url>https://github.com/bluejoe2008/elfinder-2.x-servlet</url>
@@ -22,7 +22,7 @@
 		<connection>scm:git:git@github.com:bluejoe2008/elfinder-2.x-servlet.git</connection>
 		<developerConnection>scm:git:git@github.com:bluejoe2008/elfinder-2.x-servlet.git</developerConnection>
 		<url>https://github.com/bluejoe2008/elfinder-2.x-servlet.git</url>
-	  <tag>1.2</tag>
+	  <tag>HEAD</tag>
   </scm>
 	<packaging>war</packaging>
 	<properties>
