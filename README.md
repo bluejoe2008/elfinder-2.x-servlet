@@ -21,6 +21,7 @@ use
         <groupId>com.github.bluejoe2008</groupId>
         <artifactId>elfinder-servlet-2</artifactId>
         <version>1.1</version>
+        <classifier>classes</classifier>
     </dependency>
 
 to add dependency in your pom.xml
