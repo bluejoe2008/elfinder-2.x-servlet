@@ -6,7 +6,9 @@ elfinder-2.x-servlet implements a java servlet for elfinder-2.x connector
 elfinder is an Open-source file manager for web, written in JavaScript using jQuery and jQuery UI.
 see also http://elfinder.org
 
-<img src="http://img.blog.csdn.net/20130825231837531">
+<img src="https://github.com/bluejoe2008/elfinder-2.x-servlet/blob/0.9/23205811_gr0b.png?raw=true">
+
+<img src="https://github.com/bluejoe2008/elfinder-2.x-servlet/blob/0.9/23205833_rxSV.png?raw=true">
 
 for elfinder-1.2 users, please go to https://github.com/Studio-42/elfinder-servlet.
 
@@ -143,6 +145,39 @@ an example elfinder-servlet.xml configuration is shown below:
 		</property>
 	</bean>
 	
+Supported Commands
+================
+
+elfinde-2.x-servlet implements file management commands including:
+
+*  DIM
+*  DUPLICATE
+*  FILE
+*  GET
+*  LS
+*  MKDIR
+*  MKFILE
+*  OPEN
+*  PARENT
+*  PASTE
+*  PUT
+*  RENAME
+*  RM
+*  SEARCH
+*  SIZE
+*  TMB
+*  TREE
+*  UPLOAD
+
+Each command corresponds to a CommandExecutor class, for example, the TREE command is implemented by the class cn.bluejoe.elfinder.controller.executors.TreeCommandExecutor(see elfinder-2.x-servlet/src/main/java/cn/bluejoe/elfinder/controller/executors/TreeCommandExecutor.java). Users can modify existing class or entend new executor class by following this naming rule.
+
+Furthermore, this rule can even be modified via setting the commandExecutorFactory in elfinder-servlet.xml, in which default factory is cn.bluejoe.elfinder.controller.executor.DefaultCommandExecutorFactory(see elfinder-2.x-servlet/src/main/java/cn/bluejoe/elfinder/controller/executor/DefaultCommandExecutorFactory.java). A CommandExecutorFactory tells how to locate the command executor(TreeCommandExecutor as an example) by a given command name("TREE" as an example), it is designed as an interface:
+
+	public interface CommandExecutorFactory
+	{
+		CommandExecutor get(String commandName);
+	}
+
 
 Making a release
 ================
