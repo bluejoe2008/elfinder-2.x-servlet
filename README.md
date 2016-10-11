@@ -18,7 +18,6 @@ this project is released as an artifact on the central repostory
 
 use
 
-
     <dependency>
         <groupId>com.github.bluejoe2008</groupId>
         <artifactId>elfinder-servlet-2</artifactId>
@@ -145,7 +144,7 @@ an example elfinder-servlet.xml configuration is shown below:
 		</property>
 	</bean>
 	
-Supported Commands
+Command, CommandExecutor, CommandExecutorManager
 ================
 
 elfinde-2.x-servlet implements file management commands including:
@@ -169,15 +168,28 @@ elfinde-2.x-servlet implements file management commands including:
 *  TREE
 *  UPLOAD
 
-Each command corresponds to a CommandExecutor class, for example, the TREE command is implemented by the class cn.bluejoe.elfinder.controller.executors.TreeCommandExecutor(see elfinder-2.x-servlet/src/main/java/cn/bluejoe/elfinder/controller/executors/TreeCommandExecutor.java). Users can modify existing class or entend new executor class by following this naming rule.
+Each command corresponds to a CommandExecutor class, for example, the TREE command is implemented by the class TreeCommandExecutor(see https://github.com/bluejoe2008/elfinder-2.x-servlet/src/main/java/cn/bluejoe/elfinder/controller/executors/TreeCommandExecutor.java). Users can modify existing class or entend new executor class by following this naming rule.
 
-Furthermore, this rule can even be modified via setting the commandExecutorFactory in elfinder-servlet.xml, in which default factory is cn.bluejoe.elfinder.controller.executor.DefaultCommandExecutorFactory(see elfinder-2.x-servlet/src/main/java/cn/bluejoe/elfinder/controller/executor/DefaultCommandExecutorFactory.java). A CommandExecutorFactory tells how to locate the command executor(TreeCommandExecutor as an example) by a given command name("TREE" as an example), it is designed as an interface:
+Furthermore, this rule can even be modified via setting the commandExecutorFactory in elfinder-servlet.xml, in which default factory is DefaultCommandExecutorFactory(see https://github.com/bluejoe2008/elfinder-2.x-servlet/src/main/java/cn/bluejoe/elfinder/controller/executor/DefaultCommandExecutorFactory.java). A CommandExecutorFactory tells how to locate the command executor(TreeCommandExecutor as an example) by a given command name("TREE" as an example), it is designed as an interface:
 
 	public interface CommandExecutorFactory
 	{
 		CommandExecutor get(String commandName);
 	}
 
+
+FsItem, FsVolume, FsService, FsServiceFactory
+================
+Each file is represented as a FsItem. And the root of a file is represented as a FsVolume. A FsVolume tells parent-children relations between all FsItems and implements all file operation (for example, create/delete).
+
+A FsService may have many FsVolumes. Users can create a FsService via a FsServiceFactory:
+
+	public interface FsServiceFactory
+	{
+		FsService getFileService(HttpServletRequest request, ServletContext servletContext);
+	}
+
+A simple (and stupid) StaticFsServiceFactory is provided in https://github.com/bluejoe2008/elfinder-2.x-servlet/src/main/java/cn/bluejoe/elfinder/impl/StaticFsServiceFactory.java, which always returns a fixed FsService, despite of whatever it is requested. However, sometimes a FsService should be constructed dynamically according to current Web request. For example, users may own separated file spaces in a network disk service platform, in this case, getFileService() get user principal from current request and offers him/her different file view.
 
 Making a release
 ================
