@@ -144,7 +144,21 @@ an example elfinder-servlet.xml configuration is shown below:
 			</bean>
 		</property>
 	</bean>
-	
+
+A ConnectorServlet is provided for people who do not use spring framework:
+
+	<servlet>
+		<servlet-name>elfinder-connector-servlet</servlet-name>
+		<servlet-class>cn.bluejoe.elfinder.servlet.ConnectorServlet
+		</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>elfinder-connector-servlet</servlet-name>
+		<url-pattern>/elfinder-servlet/connector</url-pattern>
+	</servlet-mapping>
+
+If you want to customize behavior of ConnectorServlet(see https://github.com/bluejoe2008/elfinder-2.x-servlet/blob/0.9/src/main/java/cn/bluejoe/elfinder/servlet/ConnectorServlet.java), you may need to create a derivided servlet class based on ConnectorServlet.
+
 Command, CommandExecutor, CommandExecutorManager
 ================
 
