@@ -3,6 +3,7 @@ package cn.bluejoe.elfinder.service;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Map;
 
 public interface FsVolume
 {
@@ -59,4 +60,11 @@ public interface FsVolume
 	 */
 	String getURL(FsItem f);
 
+	/**
+	 * This allows volumes to change the options returned to the client for a particular item.
+	 * Implementations should update the map they are passed.
+	 * @param f The item to filter the options for.
+	 * @param map The options that are going to be returned.
+	 */
+	void filterOptions(FsItem f, Map<String, Object> map);
 }

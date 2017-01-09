@@ -35,8 +35,15 @@ public class UploadCommandExecutor extends AbstractJsonCommandExecutor
 		FsItemFilter filter = getRequestedFilter(request);
 		for (FileItemStream fis : listFiles)
 		{
-			String fileName = fis.getName();
+			//fis.getName() returns full path such as 'C:\temp\abc.txt' in IE10
+			//while returns 'abc.txt' in Chrome
+			//see https://github.com/bluejoe2008/elfinder-2.x-servlet/issues/22
+			java.nio.file.Path p = java.nio.file.Paths.get(fis.getName());
+		    FsItemEx newFile = new FsItemEx(dir, p.getFileName().toString());
+			/*
+		    String fileName = fis.getName();
 			FsItemEx newFile = new FsItemEx(dir, fileName);
+			*/
 			newFile.createFile();
 			InputStream is = fis.openStream();
 			newFile.writeStream(is);

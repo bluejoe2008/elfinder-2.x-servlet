@@ -24,8 +24,11 @@
 		</property>
 		<property name="map">
 			<map>
-				<!-- <entry key="tree"> <bean class="cn.bluejoe.elfinder.controller.executors.TreeCommandExecutor" 
-					/> </entry> -->
+				<!--
+				<entry key="tree">
+					<bean class="cn.bluejoe.elfinder.controller.executors.TreeCommandExecutor" />
+				</entry>
+				-->
 			</map>
 		</property>
 	</bean>
