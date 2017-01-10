@@ -181,7 +181,7 @@ elfinde-2.x-servlet implements file management commands including:
 *  SIZE
 *  TMB
 *  TREE
-*  UPLOAD
+*  UPLOAD(CHUNK supported!!!)
 
 Each command corresponds to a CommandExecutor class, for example, the TREE command is implemented by the class TreeCommandExecutor(see https://github.com/bluejoe2008/elfinder-2.x-servlet/src/main/java/cn/bluejoe/elfinder/controller/executors/TreeCommandExecutor.java). Users can modify existing class or entend new executor class by following this naming rule.
 
