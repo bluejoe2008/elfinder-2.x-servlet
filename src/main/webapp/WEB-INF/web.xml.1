@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<web-app>
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+ 	
+ 	<!-- ConnectorServlet responds all elfinder requests -->
+ 	<!-- you can define a derived servlet based on ConnectorServlet -->
+	<servlet>
+		<servlet-name>elfinder-connector-servlet</servlet-name>
+		<servlet-class>cn.bluejoe.elfinder.servlet.ConnectorServlet
+		</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>elfinder-connector-servlet</servlet-name>
+		<url-pattern>/elfinder-servlet/connector</url-pattern>
+	</servlet-mapping>
+
+</web-app>

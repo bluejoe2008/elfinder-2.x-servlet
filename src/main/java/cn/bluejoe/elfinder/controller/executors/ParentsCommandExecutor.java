@@ -6,23 +6,25 @@ import java.util.Map;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
-import cn.bluejoe.elfinder.controller.ErrorException;
 import org.json.JSONObject;
 
+import cn.bluejoe.elfinder.controller.ErrorException;
 import cn.bluejoe.elfinder.controller.executor.AbstractJsonCommandExecutor;
 import cn.bluejoe.elfinder.controller.executor.CommandExecutor;
 import cn.bluejoe.elfinder.controller.executor.FsItemEx;
 import cn.bluejoe.elfinder.service.FsService;
 
-public class ParentsCommandExecutor extends AbstractJsonCommandExecutor implements CommandExecutor
+public class ParentsCommandExecutor extends AbstractJsonCommandExecutor
+		implements CommandExecutor
 {
-	// This is a limit on the number of parents so that a badly implemented FsService can't
+	// This is a limit on the number of parents so that a badly implemented
+	// FsService can't
 	// result in a runaway thread.
 	final static int LIMIT = 1024;
 
 	@Override
-	public void execute(FsService fsService, HttpServletRequest request, ServletContext servletContext, JSONObject json)
-			throws Exception
+	public void execute(FsService fsService, HttpServletRequest request,
+			ServletContext servletContext, JSONObject json) throws Exception
 	{
 		String target = request.getParameter("target");
 
@@ -34,7 +36,8 @@ public class ParentsCommandExecutor extends AbstractJsonCommandExecutor implemen
 			fsi = fsi.getParent();
 			if (i > LIMIT)
 			{
-				throw new ErrorException("Reached recursion limit on parents of: "+ LIMIT);
+				throw new ErrorException(
+						"Reached recursion limit on parents of: " + LIMIT);
 			}
 		}
 

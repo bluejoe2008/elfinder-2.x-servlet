@@ -6,17 +6,19 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import cn.bluejoe.elfinder.controller.ErrorException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import cn.bluejoe.elfinder.controller.ErrorException;
 import cn.bluejoe.elfinder.service.FsService;
 
-public abstract class AbstractJsonCommandExecutor extends AbstractCommandExecutor
+public abstract class AbstractJsonCommandExecutor extends
+		AbstractCommandExecutor
 {
 	@Override
-	final public void execute(FsService fsService, HttpServletRequest request, HttpServletResponse response,
-			ServletContext servletContext) throws Exception
+	final public void execute(FsService fsService, HttpServletRequest request,
+			HttpServletResponse response, ServletContext servletContext)
+			throws Exception
 	{
 		JSONObject json = new JSONObject();
 		try
@@ -33,7 +35,7 @@ public abstract class AbstractJsonCommandExecutor extends AbstractCommandExecuto
 			{
 				JSONArray errors = new JSONArray();
 				errors.put(e.getError());
-				for (String arg: e.getArgs())
+				for (String arg : e.getArgs())
 				{
 					errors.put(arg);
 				}
@@ -47,7 +49,7 @@ public abstract class AbstractJsonCommandExecutor extends AbstractCommandExecuto
 		}
 		finally
 		{
-			//response.setContentType("application/json; charset=UTF-8");
+			// response.setContentType("application/json; charset=UTF-8");
 			response.setContentType("text/html; charset=UTF-8");
 
 			PrintWriter writer = response.getWriter();
@@ -57,7 +59,8 @@ public abstract class AbstractJsonCommandExecutor extends AbstractCommandExecuto
 		}
 	}
 
-	protected abstract void execute(FsService fsService, HttpServletRequest request, ServletContext servletContext,
+	protected abstract void execute(FsService fsService,
+			HttpServletRequest request, ServletContext servletContext,
 			JSONObject json) throws Exception;
 
 }

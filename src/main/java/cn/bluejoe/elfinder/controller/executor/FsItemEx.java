@@ -2,7 +2,6 @@ package cn.bluejoe.elfinder.controller.executor;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -76,7 +75,8 @@ public class FsItemEx
 		if (_v.isFolder(_f))
 		{
 			_v.deleteFolder(_f);
-		} else
+		}
+		else
 		{
 			_v.deleteFile(_f);
 		}
@@ -210,12 +210,14 @@ public class FsItemEx
 		}
 		return list;
 	}
-	
-	public String getURL() {
+
+	public String getURL()
+	{
 		return _v.getURL(_f);
 	}
 
-	public void filterOptions(Map<String, Object> map) {
+	public void filterOptions(Map<String, Object> map)
+	{
 		_v.filterOptions(_f, map);
 	}
 }

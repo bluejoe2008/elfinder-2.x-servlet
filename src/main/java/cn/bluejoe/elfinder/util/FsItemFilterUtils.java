@@ -54,7 +54,9 @@ public abstract class FsItemFilterUtils
 	/**
 	 * returns a FsItemFilter according to given mimeFilters
 	 * 
-	 * @param mimeFilters An array of MIME types, if <code>null</code> no filtering is done
+	 * @param mimeFilters
+	 *            An array of MIME types, if <code>null</code> no filtering is
+	 *            done
 	 * @return A filter that only accepts the supplied MIME types.
 	 */
 	public static FsItemFilter createMimeFilter(final String[] mimeFilters)

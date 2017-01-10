@@ -2,24 +2,28 @@ package cn.bluejoe.elfinder.controller.executor;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.io.IOUtils;
+import org.apache.log4j.Logger;
 
 import cn.bluejoe.elfinder.service.FsItemFilter;
 import cn.bluejoe.elfinder.service.FsService;
 import cn.bluejoe.elfinder.util.FsItemFilterUtils;
 import cn.bluejoe.elfinder.util.FsServiceUtils;
-import org.apache.log4j.Logger;
 
 public abstract class AbstractCommandExecutor implements CommandExecutor
 {
-	protected static Logger LOG = Logger.getLogger(AbstractCommandExecutor.class);
+	protected static Logger LOG = Logger
+			.getLogger(AbstractCommandExecutor.class);
 
 	protected FsItemFilter getRequestedFilter(HttpServletRequest request)
 	{
@@ -202,10 +206,11 @@ public abstract class AbstractCommandExecutor implements CommandExecutor
 		map.put("separator", "/");
 		map.put("copyOverwrite", 1);
 		map.put("archivers", new Object[0]);
-		// Currently we don't support chunked uploads which came in with a newer version of elfinder 2.1
+		// Currently we don't support chunked uploads which came in with a newer
+		// version of elfinder 2.1
 		map.put("uploadMaxConn", "-1");
 		// We don't have an implementation of zipdl at the moment.
-		map.put("disabled", Arrays.asList(new String[]{"zipdl"}));
+		map.put("disabled", Arrays.asList(new String[] { "zipdl" }));
 		String url = cwd.getURL();
 		if (url != null)
 		{

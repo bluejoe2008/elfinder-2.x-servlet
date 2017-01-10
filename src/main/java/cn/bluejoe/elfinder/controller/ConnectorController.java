@@ -1,7 +1,5 @@
 package cn.bluejoe.elfinder.controller;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationHandler;
@@ -21,7 +19,6 @@ import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
-import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -47,7 +44,8 @@ public class ConnectorController
 		try
 		{
 			request = parseMultipartContent(request);
-		} catch (Exception e)
+		}
+		catch (Exception e)
 		{
 			throw new IOException(e.getMessage());
 		}
@@ -91,7 +89,8 @@ public class ConnectorController
 					return finalRequest.getSession().getServletContext();
 				}
 			});
-		} catch (Exception e)
+		}
+		catch (Exception e)
 		{
 			throw new FsException("unknown error", e);
 		}
@@ -113,8 +112,8 @@ public class ConnectorController
 		if (!ServletFileUpload.isMultipartContent(request))
 			return request;
 
+		// non-file parameters
 		final Map<String, String> requestParams = new HashMap<String, String>();
-		List<FileItemStream> listFiles = new ArrayList<FileItemStream>();
 
 		// Parse the request
 		ServletFileUpload sfu = new ServletFileUpload();
@@ -123,56 +122,39 @@ public class ConnectorController
 		{
 			characterEncoding = "UTF-8";
 		}
+
 		sfu.setHeaderEncoding(characterEncoding);
 		FileItemIterator iter = sfu.getItemIterator(request);
+		MultipleUploadItems uploads = new MultipleUploadItems();
 
 		while (iter.hasNext())
 		{
-			final FileItemStream item = iter.next();
-			String name = item.getFieldName();
-			InputStream stream = item.openStream();
+			FileItemStream item = iter.next();
+
+			// not a file
 			if (item.isFormField())
 			{
-				requestParams.put(name,
+				InputStream stream = item.openStream();
+				requestParams.put(item.getFieldName(),
 						Streams.asString(stream, characterEncoding));
-			} else
+				stream.close();
+			}
+			else
 			{
+				// it is a file!
 				String fileName = item.getName();
 				if (fileName != null && !"".equals(fileName.trim()))
 				{
-					ByteArrayOutputStream os = new ByteArrayOutputStream();
-					IOUtils.copy(stream, os);
-					final byte[] bs = os.toByteArray();
-					stream.close();
-
-					listFiles.add((FileItemStream) Proxy.newProxyInstance(this
-							.getClass().getClassLoader(),
-							new Class[] { FileItemStream.class },
-							new InvocationHandler()
-							{
-								@Override
-								public Object invoke(Object proxy,
-										Method method, Object[] args)
-										throws Throwable
-								{
-									if ("openStream".equals(method.getName()))
-									{
-										return new ByteArrayInputStream(bs);
-									}
-
-									return method.invoke(item, args);
-								}
-							}));
+					uploads.addItemProxy(item);
 				}
 			}
 		}
 
-		request.setAttribute(FileItemStream.class.getName(), listFiles);
+		uploads.writeInto(request);
 
 		// 'getParameter()' method can not be called on original request object
 		// after parsing
 		// so we stored the request values and provide a delegate request object
-
 		return (HttpServletRequest) Proxy.newProxyInstance(this.getClass()
 				.getClassLoader(), new Class[] { HttpServletRequest.class },
 				new InvocationHandler()
@@ -212,7 +194,8 @@ public class ConnectorController
 								if (requestParams.containsKey(name2))
 								{
 									paramValues.add(requestParams.get(name2));
-								} else
+								}
+								else
 								{
 									break;
 								}

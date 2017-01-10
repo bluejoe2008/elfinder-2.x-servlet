@@ -13,7 +13,8 @@ public class FsSecurityCheckerChain implements FsSecurityChecker
 
 	List<FsSecurityCheckFilterMapping> _filterMappings;
 
-	private FsSecurityChecker getChecker(FsService fsService, FsItem fsi) throws IOException
+	private FsSecurityChecker getChecker(FsService fsService, FsItem fsi)
+			throws IOException
 	{
 		String hash = fsService.getHash(fsi);
 		for (FsSecurityCheckFilterMapping mapping : _filterMappings)
@@ -39,18 +40,21 @@ public class FsSecurityCheckerChain implements FsSecurityChecker
 	}
 
 	@Override
-	public boolean isReadable(FsService fsService, FsItem fsi) throws IOException
+	public boolean isReadable(FsService fsService, FsItem fsi)
+			throws IOException
 	{
 		return getChecker(fsService, fsi).isReadable(fsService, fsi);
 	}
 
 	@Override
-	public boolean isWritable(FsService fsService, FsItem fsi) throws IOException
+	public boolean isWritable(FsService fsService, FsItem fsi)
+			throws IOException
 	{
 		return getChecker(fsService, fsi).isWritable(fsService, fsi);
 	}
 
-	public void setFilterMappings(List<FsSecurityCheckFilterMapping> filterMappings)
+	public void setFilterMappings(
+			List<FsSecurityCheckFilterMapping> filterMappings)
 	{
 		_filterMappings = filterMappings;
 	}

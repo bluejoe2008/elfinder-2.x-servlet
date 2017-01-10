@@ -21,7 +21,7 @@ import cn.bluejoe.elfinder.localfs.LocalFsVolume;
 
 public class ConnectorServlet extends HttpServlet
 {
-	//core member of this Servlet
+	// core member of this Servlet
 	ConnectorController _connectorController;
 
 	/**

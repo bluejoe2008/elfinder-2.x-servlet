@@ -98,9 +98,11 @@ public class LocalFsVolume implements FsVolume
 
 	private LocalFsItem fromFile(File file)
 	{
-		if (!file.getAbsolutePath().startsWith(_rootDir.getAbsolutePath())) {
-			String message = String.format("Item (%s) can't be outside the root directory (%s)",
-				file.getAbsolutePath(), _rootDir.getAbsolutePath());
+		if (!file.getAbsolutePath().startsWith(_rootDir.getAbsolutePath()))
+		{
+			String message = String.format(
+					"Item (%s) can't be outside the root directory (%s)",
+					file.getAbsolutePath(), _rootDir.getAbsolutePath());
 			throw new IllegalArgumentException(message);
 		}
 		return new LocalFsItem(this, file);

@@ -7,7 +7,8 @@ import cn.bluejoe.elfinder.service.FsService;
 import cn.bluejoe.elfinder.service.FsServiceFactory;
 
 /**
- * A StaticFsServiceFactory always returns one FsService, despite of whatever it is requested 
+ * A StaticFsServiceFactory always returns one FsService, despite of whatever it
+ * is requested
  * 
  * @author bluejoe
  *
@@ -17,7 +18,8 @@ public class StaticFsServiceFactory implements FsServiceFactory
 	FsService _fsService;
 
 	@Override
-	public FsService getFileService(HttpServletRequest request, ServletContext servletContext)
+	public FsService getFileService(HttpServletRequest request,
+			ServletContext servletContext)
 	{
 		return _fsService;
 	}

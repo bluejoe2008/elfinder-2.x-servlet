@@ -12,7 +12,6 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 
 import cn.bluejoe.elfinder.controller.executor.FsItemEx;
-import cn.bluejoe.elfinder.localfs.LocalFsVolume;
 import cn.bluejoe.elfinder.service.FsItem;
 import cn.bluejoe.elfinder.service.FsItemFilter;
 import cn.bluejoe.elfinder.service.FsSecurityChecker;
