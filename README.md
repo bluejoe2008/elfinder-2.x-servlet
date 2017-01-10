@@ -159,6 +159,14 @@ A ConnectorServlet is provided for people who do not use spring framework:
 
 If you want to customize behavior of ConnectorServlet(see https://github.com/bluejoe2008/elfinder-2.x-servlet/blob/0.9/src/main/java/cn/bluejoe/elfinder/servlet/ConnectorServlet.java), you may need to create a derivided servlet class based on ConnectorServlet.
 
+features
+================
+* easy to use: defines a servlet in your web.xml, or configures the XML file in spring IOC format, and then starts your web application
+* easy to import: an artifact on the central repostory is provided, use maven to manage the dependency
+* logic file views: a local file system is not necessary, you can define your FsService
+* easy to personalize: allows different file views for different users, just provide a custom FsServiceFactory
+* easy to modify and extend: provides your own CommandExecutors to repond new commands
+
 Command, CommandExecutor, CommandExecutorManager
 ================
 
