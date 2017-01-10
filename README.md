@@ -161,11 +161,11 @@ If you want to customize behavior of ConnectorServlet(see https://github.com/blu
 
 features
 ================
-* easy to use: defines a servlet in your web.xml, or configures the XML file in spring IOC format, and then starts your web application
-* easy to import: an artifact on the central repostory is provided, use maven to manage the dependency
-* logic file views: a local file system is not necessary, you can define your FsService
-* easy to personalize: allows different file views for different users, just provide a custom FsServiceFactory
-* easy to modify and extend: provides your own CommandExecutors to repond new commands
+* __easy to use__: just define a servlet in your web.xml, or configure the XML file in spring IOC format, and then start your web application
+* __easy to import__: an artifact on the central repostory is provided, use maven to manage the dependency
+* __logic file views__: a local file system is not necessary, you can define your FsService
+* __easy to personalize__: different file views are allowed for different users, just provide a custom FsServiceFactory
+* __easy to modify and extend__: provide your own CommandExecutors to respond new commands
 
 Command, CommandExecutor, CommandExecutorManager
 ================
