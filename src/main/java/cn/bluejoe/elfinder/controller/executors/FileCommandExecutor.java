@@ -40,8 +40,7 @@ public class FileCommandExecutor extends AbstractCommandExecutor implements
 		// a folder!
 		if (fsi.isFolder())
 		{
-			response.sendRedirect("/"
-					+ request.getServletContext().getContextPath() + "#elf_"
+			response.sendRedirect(request.getHeader("Referer") + "#elf_"
 					+ fsi.getHash());
 			return;
 		}
