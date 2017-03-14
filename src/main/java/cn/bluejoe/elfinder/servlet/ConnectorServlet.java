@@ -19,6 +19,15 @@ import cn.bluejoe.elfinder.impl.FsSecurityCheckForAll;
 import cn.bluejoe.elfinder.impl.StaticFsServiceFactory;
 import cn.bluejoe.elfinder.localfs.LocalFsVolume;
 
+/**
+ * ConnectorServlet is an example servlet
+ * it creates a ConnectorController on init() and use it to handle requests on doGet()/doPost()
+ * 
+ * users should extend from this servlet and customize required protected methods
+ * 
+ * @author bluejoe
+ *
+ */
 public class ConnectorServlet extends HttpServlet
 {
 	// core member of this Servlet
