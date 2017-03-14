@@ -36,6 +36,16 @@ public class FileCommandExecutor extends AbstractCommandExecutor implements
 		response.setContentType(mime);
 		// String fileUrl = getFileUrl(fileTarget);
 		// String fileUrlRelative = getFileUrl(fileTarget);
+
+		// a folder!
+		if (fsi.isFolder())
+		{
+			response.sendRedirect("/"
+					+ request.getServletContext().getContextPath() + "#elf_"
+					+ fsi.getHash());
+			return;
+		}
+
 		String fileName = fsi.getName();
 		// fileName = new String(fileName.getBytes("utf-8"), "ISO8859-1");
 		if (download || MimeTypesUtils.isUnknownType(mime))
