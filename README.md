@@ -170,7 +170,7 @@ features
 Command, CommandExecutor, CommandExecutorManager
 ================
 
-elfinde-2.x-servlet implements file management commands including:
+elfinder-2.x-servlet implements file management commands including:
 
 *  DIM
 *  DUPLICATE
