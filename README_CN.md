@@ -1,3 +1,5 @@
+English Version: https://github.com/bluejoe2008/elfinder-2.x-servlet/blob/master/README.md
+
 what's elfinder-2.x-servlet
 ====================
 
