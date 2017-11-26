@@ -123,7 +123,7 @@ public class LocalFsVolume implements FsVolume
 	@Override
 	public long getLastModified(FsItem fsi)
 	{
-		return asFile(fsi).lastModified();
+		return asFile(fsi).lastModified() / 1000;
 	}
 
 	@Override
