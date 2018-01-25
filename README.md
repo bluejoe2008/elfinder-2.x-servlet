@@ -1,5 +1,3 @@
-中文版：https://github.com/bluejoe2008/elfinder-2.x-servlet/blob/master/README_CN.md
-
 what's elfinder-2.x-servlet
 ====================
 
