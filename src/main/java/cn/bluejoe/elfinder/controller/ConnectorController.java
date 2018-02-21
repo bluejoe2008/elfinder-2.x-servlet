@@ -1,5 +1,22 @@
 package cn.bluejoe.elfinder.controller;
 
+import cn.bluejoe.elfinder.controller.executor.CommandExecutionContext;
+import cn.bluejoe.elfinder.controller.executor.CommandExecutor;
+import cn.bluejoe.elfinder.controller.executor.CommandExecutorFactory;
+import cn.bluejoe.elfinder.service.FsServiceFactory;
+import org.apache.commons.fileupload.FileItemIterator;
+import org.apache.commons.fileupload.FileItemStream;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.fileupload.util.Streams;
+import org.apache.log4j.Logger;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.annotation.Resource;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationHandler;
@@ -10,214 +27,194 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.fileupload.FileItemIterator;
-import org.apache.commons.fileupload.FileItemStream;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.apache.commons.fileupload.util.Streams;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import cn.bluejoe.elfinder.controller.executor.CommandExecutionContext;
-import cn.bluejoe.elfinder.controller.executor.CommandExecutor;
-import cn.bluejoe.elfinder.controller.executor.CommandExecutorFactory;
-import cn.bluejoe.elfinder.service.FsServiceFactory;
-
 @Controller
 @RequestMapping("connector")
-public class ConnectorController
-{
-	@Resource(name = "commandExecutorFactory")
-	private CommandExecutorFactory _commandExecutorFactory;
+public class ConnectorController {
+    Logger _logger = Logger.getLogger(this.getClass());
+    @Resource(name = "commandExecutorFactory")
+    private CommandExecutorFactory _commandExecutorFactory;
 
-	@Resource(name = "fsServiceFactory")
-	private FsServiceFactory _fsServiceFactory;
+    @Resource(name = "fsServiceFactory")
+    private FsServiceFactory _fsServiceFactory;
 
-	@RequestMapping
-	public void connector(HttpServletRequest request,
-			final HttpServletResponse response) throws IOException
-	{
-		try
-		{
-			request = parseMultipartContent(request);
-		}
-		catch (Exception e)
-		{
-			throw new IOException(e.getMessage());
-		}
+    private File _tempDir = null;
+    String _tempDirPath = "./tmp";
 
-		String cmd = request.getParameter("cmd");
-		CommandExecutor ce = _commandExecutorFactory.get(cmd);
+    /**
+     * set temp file dir path, relative path is allowed (web root as base dir)
+     *
+     * @param value
+     */
+    public void setTempDirPath(String value) {
+        _tempDirPath = value;
+    }
 
-		if (ce == null)
-		{
-			// This shouldn't happen as we should have a fallback command set.
-			throw new FsException(String.format("unknown command: %s", cmd));
-		}
+    @RequestMapping
+    public void connector(HttpServletRequest request,
+                          final HttpServletResponse response) throws IOException {
+        try {
+            request = parseMultipartContent(request);
+        } catch (Exception e) {
+            throw new IOException(e.getMessage());
+        }
 
-		try
-		{
-			final HttpServletRequest finalRequest = request;
-			ce.execute(new CommandExecutionContext()
-			{
+        String cmd = request.getParameter("cmd");
+        CommandExecutor ce = _commandExecutorFactory.get(cmd);
 
-				@Override
-				public FsServiceFactory getFsServiceFactory()
-				{
-					return _fsServiceFactory;
-				}
+        if (ce == null) {
+            // This shouldn't happen as we should have a fallback command set.
+            throw new FsException(String.format("unknown command: %s", cmd));
+        }
 
-				@Override
-				public HttpServletRequest getRequest()
-				{
-					return finalRequest;
-				}
+        try {
+            final HttpServletRequest finalRequest = request;
+            ce.execute(new CommandExecutionContext() {
 
-				@Override
-				public HttpServletResponse getResponse()
-				{
-					return response;
-				}
+                @Override
+                public FsServiceFactory getFsServiceFactory() {
+                    return _fsServiceFactory;
+                }
 
-				@Override
-				public ServletContext getServletContext()
-				{
-					return finalRequest.getSession().getServletContext();
-				}
-			});
-		}
-		catch (Exception e)
-		{
-			throw new FsException("unknown error", e);
-		}
-	}
+                @Override
+                public HttpServletRequest getRequest() {
+                    return finalRequest;
+                }
 
-	public CommandExecutorFactory getCommandExecutorFactory()
-	{
-		return _commandExecutorFactory;
-	}
+                @Override
+                public HttpServletResponse getResponse() {
+                    return response;
+                }
 
-	public FsServiceFactory getFsServiceFactory()
-	{
-		return _fsServiceFactory;
-	}
+                @Override
+                public ServletContext getServletContext() {
+                    return finalRequest.getSession().getServletContext();
+                }
+            });
 
-	private HttpServletRequest parseMultipartContent(
-			final HttpServletRequest request) throws Exception
-	{
-		if (!ServletFileUpload.isMultipartContent(request))
-			return request;
+            //clean temp files, cached objects...
+            MultipleUploadItems.finalize(request);
+        } catch (Exception e) {
+            throw new FsException("unknown error", e);
+        }
+    }
 
-		// non-file parameters
-		final Map<String, String> requestParams = new HashMap<String, String>();
+    public CommandExecutorFactory getCommandExecutorFactory() {
+        return _commandExecutorFactory;
+    }
 
-		// Parse the request
-		ServletFileUpload sfu = new ServletFileUpload();
-		String characterEncoding = request.getCharacterEncoding();
-		if (characterEncoding == null)
-		{
-			characterEncoding = "UTF-8";
-		}
+    public FsServiceFactory getFsServiceFactory() {
+        return _fsServiceFactory;
+    }
 
-		sfu.setHeaderEncoding(characterEncoding);
-		FileItemIterator iter = sfu.getItemIterator(request);
-		MultipleUploadItems uploads = new MultipleUploadItems();
+    private HttpServletRequest parseMultipartContent(
+            final HttpServletRequest request) throws Exception {
+        if (!ServletFileUpload.isMultipartContent(request))
+            return request;
 
-		while (iter.hasNext())
-		{
-			FileItemStream item = iter.next();
+        // non-file parameters
+        final Map<String, String> requestParams = new HashMap<String, String>();
 
-			// not a file
-			if (item.isFormField())
-			{
-				InputStream stream = item.openStream();
-				requestParams.put(item.getFieldName(),
-						Streams.asString(stream, characterEncoding));
-				stream.close();
-			}
-			else
-			{
-				// it is a file!
-				String fileName = item.getName();
-				if (fileName != null && !"".equals(fileName.trim()))
-				{
-					uploads.addItemProxy(item);
-				}
-			}
-		}
+        // Parse the request
+        ServletFileUpload sfu = new ServletFileUpload();
+        String characterEncoding = request.getCharacterEncoding();
+        if (characterEncoding == null) {
+            characterEncoding = "UTF-8";
+        }
 
-		uploads.writeInto(request);
+        sfu.setHeaderEncoding(characterEncoding);
+        FileItemIterator iter = sfu.getItemIterator(request);
+        MultipleUploadItems uploads = new MultipleUploadItems(getTempDir(request));
 
-		// 'getParameter()' method can not be called on original request object
-		// after parsing
-		// so we stored the request values and provide a delegate request object
-		return (HttpServletRequest) Proxy.newProxyInstance(this.getClass()
-				.getClassLoader(), new Class[] { HttpServletRequest.class },
-				new InvocationHandler()
-				{
-					@Override
-					public Object invoke(Object arg0, Method arg1, Object[] arg2)
-							throws Throwable
-					{
-						// we replace getParameter() and getParameterValues()
-						// methods
-						if ("getParameter".equals(arg1.getName()))
-						{
-							String paramName = (String) arg2[0];
-							return requestParams.get(paramName);
-						}
+        while (iter.hasNext()) {
+            FileItemStream item = iter.next();
 
-						if ("getParameterValues".equals(arg1.getName()))
-						{
-							String paramName = (String) arg2[0];
+            // not a file
+            if (item.isFormField()) {
+                InputStream stream = item.openStream();
+                requestParams.put(item.getFieldName(),
+                        Streams.asString(stream, characterEncoding));
+                stream.close();
+            } else {
+                // it is a file!
+                String fileName = item.getName();
+                if (fileName != null && !"".equals(fileName.trim())) {
+                    uploads.addItemProxy(item);
+                }
+            }
+        }
 
-							// normalize name 'key[]' to 'key'
-							if (paramName.endsWith("[]"))
-								paramName = paramName.substring(0,
-										paramName.length() - 2);
+        uploads.writeInto(request);
 
-							if (requestParams.containsKey(paramName))
-								return new String[] { requestParams
-										.get(paramName) };
+        // 'getParameter()' method can not be called on original request object
+        // after parsing
+        // so we stored the request values and provide a delegate request object
+        return (HttpServletRequest) Proxy.newProxyInstance(this.getClass()
+                        .getClassLoader(), new Class[]{HttpServletRequest.class},
+                new InvocationHandler() {
+                    @Override
+                    public Object invoke(Object arg0, Method arg1, Object[] arg2)
+                            throws Throwable {
+                        // we replace getParameter() and getParameterValues()
+                        // methods
+                        if ("getParameter".equals(arg1.getName())) {
+                            String paramName = (String) arg2[0];
+                            return requestParams.get(paramName);
+                        }
 
-							// if contains key[1], key[2]...
-							int i = 0;
-							List<String> paramValues = new ArrayList<String>();
-							while (true)
-							{
-								String name2 = String.format("%s[%d]",
-										paramName, i++);
-								if (requestParams.containsKey(name2))
-								{
-									paramValues.add(requestParams.get(name2));
-								}
-								else
-								{
-									break;
-								}
-							}
+                        if ("getParameterValues".equals(arg1.getName())) {
+                            String paramName = (String) arg2[0];
 
-							return paramValues.isEmpty() ? new String[0]
-									: paramValues.toArray(new String[0]);
-						}
+                            // normalize name 'key[]' to 'key'
+                            if (paramName.endsWith("[]"))
+                                paramName = paramName.substring(0,
+                                        paramName.length() - 2);
 
-						return arg1.invoke(request, arg2);
-					}
-				});
-	}
+                            if (requestParams.containsKey(paramName))
+                                return new String[]{requestParams
+                                        .get(paramName)};
 
-	public void setCommandExecutorFactory(
-			CommandExecutorFactory _commandExecutorFactory)
-	{
-		this._commandExecutorFactory = _commandExecutorFactory;
-	}
+                            // if contains key[1], key[2]...
+                            int i = 0;
+                            List<String> paramValues = new ArrayList<String>();
+                            while (true) {
+                                String name2 = String.format("%s[%d]",
+                                        paramName, i++);
+                                if (requestParams.containsKey(name2)) {
+                                    paramValues.add(requestParams.get(name2));
+                                } else {
+                                    break;
+                                }
+                            }
 
-	public void setFsServiceFactory(FsServiceFactory _fsServiceFactory)
-	{
-		this._fsServiceFactory = _fsServiceFactory;
-	}
+                            return paramValues.isEmpty() ? new String[0]
+                                    : paramValues.toArray(new String[0]);
+                        }
+
+                        return arg1.invoke(request, arg2);
+                    }
+                });
+    }
+
+    public void setCommandExecutorFactory(
+            CommandExecutorFactory _commandExecutorFactory) {
+        this._commandExecutorFactory = _commandExecutorFactory;
+    }
+
+    public void setFsServiceFactory(FsServiceFactory _fsServiceFactory) {
+        this._fsServiceFactory = _fsServiceFactory;
+    }
+
+    private File getTempDir(HttpServletRequest request) throws IOException {
+        if (_tempDir != null)
+            return _tempDir;
+
+        _tempDir = new File(_tempDirPath);
+        if (!_tempDir.isAbsolute()) {
+            _tempDir = new File(request.getServletContext().getRealPath(_tempDirPath));
+        }
+
+        _tempDir.mkdirs();
+        _logger.info(String.format("using temp dir: %s", _tempDir.getCanonicalPath()));
+        return _tempDir;
+    }
 }
