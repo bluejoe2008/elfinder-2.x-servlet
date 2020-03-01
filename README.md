@@ -19,7 +19,7 @@ this project is released as an artifact on the central repostory
 use
 
     <dependency>
-        <groupId>com.github.bluejoe2008</groupId>
+        <groupId>org.grapheco</groupId>
         <artifactId>elfinder-servlet-2</artifactId>
         <version>1.1</version>
         <classifier>classes</classifier>
@@ -74,14 +74,14 @@ an example elfinder-servlet.xml configuration is shown below:
 
 	<!-- find appropriate  command executor for given command-->
 	<bean id="commandExecutorFactory"
-		class="cn.bluejoe.elfinder.controller.executor.DefaultCommandExecutorFactory">
+		class="org.grapheco.elfinder.controller.executor.DefaultCommandExecutorFactory">
 		<property name="classNamePattern"
-			value="cn.bluejoe.elfinder.controller.executors.%sCommandExecutor" />
+			value="org.grapheco.elfinder.controller.executors.%sCommandExecutor" />
 		<property name="map">
 			<map>
 			<!-- 
 				<entry key="tree">
-					<bean class="cn.bluejoe.elfinder.controller.executors.TreeCommandExecutor" />
+					<bean class="org.grapheco.elfinder.controller.executors.TreeCommandExecutor" />
 				</entry>
 			-->
 			</map>
@@ -90,11 +90,11 @@ an example elfinder-servlet.xml configuration is shown below:
 
 	<!-- FsService is often retrieved from HttpRequest -->
 	<!-- while a static FsService is defined here -->
-	<bean id="fsServiceFactory" class="cn.bluejoe.elfinder.impl.StaticFsServiceFactory">
+	<bean id="fsServiceFactory" class="org.grapheco.elfinder.impl.StaticFsServiceFactory">
 		<property name="fsService">
-			<bean class="cn.bluejoe.elfinder.impl.DefaultFsService">
+			<bean class="org.grapheco.elfinder.impl.DefaultFsService">
 				<property name="serviceConfig">
-					<bean class="cn.bluejoe.elfinder.impl.DefaultFsServiceConfig">
+					<bean class="org.grapheco.elfinder.impl.DefaultFsServiceConfig">
 						<property name="tmbWidth" value="80" />
 					</bean>
 				</property>
@@ -102,13 +102,13 @@ an example elfinder-servlet.xml configuration is shown below:
 					<!-- two volumes are mounted here -->
 					<map>
 						<entry key="A">
-							<bean class="cn.bluejoe.elfinder.localfs.LocalFsVolume">
+							<bean class="org.grapheco.elfinder.localfs.LocalFsVolume">
 								<property name="name" value="MyFiles" />
 								<property name="rootDir" value="/tmp/a" />
 							</bean>
 						</entry>
 						<entry key="B">
-							<bean class="cn.bluejoe.elfinder.localfs.LocalFsVolume">
+							<bean class="org.grapheco.elfinder.localfs.LocalFsVolume">
 								<property name="name" value="Shared" />
 								<property name="rootDir" value="/tmp/b" />
 							</bean>
@@ -116,22 +116,22 @@ an example elfinder-servlet.xml configuration is shown below:
 					</map>
 				</property>
 				<property name="securityChecker">
-					<bean class="cn.bluejoe.elfinder.impl.FsSecurityCheckerChain">
+					<bean class="org.grapheco.elfinder.impl.FsSecurityCheckerChain">
 						<property name="filterMappings">
 							<list>
-								<bean class="cn.bluejoe.elfinder.impl.FsSecurityCheckFilterMapping">
+								<bean class="org.grapheco.elfinder.impl.FsSecurityCheckFilterMapping">
 									<property name="pattern" value="A_.*" />
 									<property name="checker">
-										<bean class="cn.bluejoe.elfinder.impl.FsSecurityCheckForAll">
+										<bean class="org.grapheco.elfinder.impl.FsSecurityCheckForAll">
 											<property name="readable" value="true" />
 											<property name="writable" value="true" />
 										</bean>
 									</property>
 								</bean>
-								<bean class="cn.bluejoe.elfinder.impl.FsSecurityCheckFilterMapping">
+								<bean class="org.grapheco.elfinder.impl.FsSecurityCheckFilterMapping">
 									<property name="pattern" value="B_.*" />
 									<property name="checker">
-										<bean class="cn.bluejoe.elfinder.impl.FsSecurityCheckForAll">
+										<bean class="org.grapheco.elfinder.impl.FsSecurityCheckForAll">
 											<property name="readable" value="true" />
 											<property name="writable" value="false" />
 										</bean>
@@ -149,7 +149,7 @@ A ConnectorServlet is provided for people who do not use spring framework:
 
 	<servlet>
 		<servlet-name>elfinder-connector-servlet</servlet-name>
-		<servlet-class>cn.bluejoe.elfinder.servlet.ConnectorServlet
+		<servlet-class>org.grapheco.elfinder.servlet.ConnectorServlet
 		</servlet-class>
 	</servlet>
 	<servlet-mapping>
