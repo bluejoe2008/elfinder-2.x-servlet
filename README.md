@@ -1,6 +1,11 @@
 what's elfinder-2.x-servlet
 ====================
 
+[![GitHub issues](https://img.shields.io/github/issues/bluejoe2008/elfinder-2.x-servlet.svg)](https://github.com/bluejoe2008/elfinder-2.x-servlet/issues)
+[![GitHub forks](https://img.shields.io/github/forks/bluejoe2008/elfinder-2.x-servlet.svg)](https://github.com/bluejoe2008/elfinder-2.x-servlet/network)
+[![GitHub stars](https://img.shields.io/github/stars/bluejoe2008/elfinder-2.x-servlet.svg)](https://github.com/bluejoe2008/elfinder-2.x-servlet/stargazers)
+[![GitHub license](https://img.shields.io/github/license/bluejoe2008/elfinder-2.x-servlet.svg)](https://github.com/bluejoe2008/elfinder-2.x-servlet/blob/master/LICENSE)
+
 elfinder-2.x-servlet implements a java servlet for elfinder-2.x connector
 
 elfinder is an Open-source file manager for web, written in JavaScript using jQuery and jQuery UI.
