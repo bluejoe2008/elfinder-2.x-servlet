@@ -24,9 +24,9 @@ this project is released as an artifact on the central repostory
 use
 
     <dependency>
-        <groupId>org.grapheco</groupId>
-        <artifactId>elfinder-servlet-2</artifactId>
-        <version>1.1</version>
+	<groupId>org.grapheco</groupId>
+	<artifactId>elfinder-servlet-2</artifactId>
+	<version>1.4</version>
         <classifier>classes</classifier>
     </dependency>
 
