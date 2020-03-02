@@ -26,7 +26,7 @@ use
     <dependency>
         <groupId>org.grapheco</groupId>
         <artifactId>elfinder-servlet-2</artifactId>
-        <version>1.1</version>
+        <version>1.4</version>
         <classifier>classes</classifier>
     </dependency>
 
@@ -218,20 +218,3 @@ A FsService may have many FsVolumes. Users can create a FsService via a FsServic
 	}
 
 A simple (and stupid) StaticFsServiceFactory is provided in https://github.com/bluejoe2008/elfinder-2.x-servlet/src/main/java/cn/bluejoe/elfinder/impl/StaticFsServiceFactory.java, which always returns a fixed FsService, despite of whatever it is requested. However, sometimes a FsService should be constructed dynamically according to current Web request. For example, users may own separated file spaces in a network disk service platform, in this case, getFileService() get user principal from current request and offers him/her different file view.
-
-Making a release
-================
-
-For a developer to make a release they need to have setup an account and with Sonatype and have a PGP key
-for signing the release more details can be found at: http://central.sonatype.org/pages/apache-maven.html
-
-Then to make a release you first tag the version and push this to github:
-
-    mvn release:clean release:prepare
-
-and if everything goes ok you can then release the actual artifact based on the tag:
-
-    mvn release:perform
-
-This will stage the artifacy on the Sonatype servers, once there it will be checked and it it's ok you can
-then release it: http://central.sonatype.org/pages/releasing-the-deployment.html
