@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.log4j.Logger;
 
 import org.grapheco.elfinder.controller.executor.FsItemEx;
 import org.grapheco.elfinder.service.FsItem;
@@ -18,9 +17,13 @@ import org.grapheco.elfinder.service.FsSecurityChecker;
 import org.grapheco.elfinder.service.FsService;
 import org.grapheco.elfinder.service.FsServiceConfig;
 import org.grapheco.elfinder.service.FsVolume;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DefaultFsService implements FsService
 {
+	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultFsService.class);
+
 	FsSecurityChecker _securityChecker;
 
 	FsServiceConfig _serviceConfig;
@@ -37,7 +40,7 @@ public class DefaultFsService implements FsService
 	 * find files by name pattern, this provides a simple recursively iteration based method
 	 * lucene engines can be introduced to improve it!
 	 * This searches across all volumes.
-	 * 
+	 *
 	 * @param filter The filter to apply to select files.
 	 * @return A collection of files that match  the filter and gave the root as a parent.
 	 */
@@ -55,7 +58,7 @@ public class DefaultFsService implements FsService
 
 	/**
 	 * find files recursively in specific folder
-	 * 
+	 *
 	 * @param filter
 	 *            The filter to apply to select files.
 	 * @param root
@@ -187,14 +190,12 @@ public class DefaultFsService implements FsService
 	 */
 	public void setVolumes(FsVolume[] volumes) throws IOException
 	{
-		Logger.getLogger(getClass())
-				.warn("calling setVolumes() is deprecated, please use setVolumeMap() to specify volume id explicitly");
+		LOGGER.warn("calling setVolumes() is deprecated, please use setVolumeMap() to specify volume id explicitly");
 		char vid = 'A';
 		for (FsVolume volume : volumes)
 		{
 			_volumeMap.put("" + vid, volume);
-			Logger.getLogger(this.getClass()).info(
-					String.format("mounted %s: %s", "" + vid, volume));
+			LOGGER.info(String.format("mounted %s: %s", "" + vid, volume));
 			vid++;
 		}
 	}
@@ -202,7 +203,6 @@ public class DefaultFsService implements FsService
 	public void addVolume(String name, FsVolume fsVolume)
 	{
 		_volumeMap.put(name, fsVolume);
-		Logger.getLogger(this.getClass()).info(
-				String.format("mounted %s: %s", name, fsVolume));
+		LOGGER.info(String.format("mounted %s: %s", name, fsVolume));
 	}
 }

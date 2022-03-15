@@ -3,7 +3,8 @@ package org.grapheco.elfinder.controller;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
@@ -19,7 +20,7 @@ import java.util.List;
  * @author bluejoe
  */
 public class MultipleUploadItems {
-    Logger _logger = Logger.getLogger(this.getClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(MultipleUploadItems.class);
     List<FileItemStream> _items = new ArrayList<FileItemStream>();
     File _tempDir;
 
@@ -61,7 +62,7 @@ public class MultipleUploadItems {
         os.close();
         //final byte[] bs = os.toByteArray();
         stream.close();
-        _logger.debug(String.format("saving item: %s", source.getCanonicalPath()));
+        LOGGER.debug(String.format("saving item: %s", source.getCanonicalPath()));
         addItem((FileItemStream) Proxy.newProxyInstance(this.getClass()
                         .getClassLoader(), new Class[]{FileItemStream.class, Finalizable.class},
                 new InvocationHandler() {
@@ -74,7 +75,7 @@ public class MultipleUploadItems {
                         }
                         if ("finalize".equals(method.getName())) {
                             source.delete();
-                            _logger.debug(String.format("removing item: %s", source.getCanonicalPath()));
+                            LOGGER.debug(String.format("removing item: %s", source.getCanonicalPath()));
                             return null;
                         }
                         return method.invoke(item, args);

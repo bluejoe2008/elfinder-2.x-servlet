@@ -13,7 +13,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.fileupload.FileItemStream;
-import org.apache.log4j.Logger;
 import org.json.JSONObject;
 
 import org.grapheco.elfinder.controller.MultipleUploadItems;
@@ -22,11 +21,13 @@ import org.grapheco.elfinder.controller.executor.CommandExecutor;
 import org.grapheco.elfinder.controller.executor.FsItemEx;
 import org.grapheco.elfinder.service.FsItemFilter;
 import org.grapheco.elfinder.service.FsService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class UploadCommandExecutor extends AbstractJsonCommandExecutor
 		implements CommandExecutor
 {
-	Logger _logger = Logger.getLogger(this.getClass());
+	private static final Logger LOGGER = LoggerFactory.getLogger(UploadCommandExecutor.class);
 
 	// large file will be splitted into many parts
 	class Part
@@ -239,17 +240,17 @@ public class UploadCommandExecutor extends AbstractJsonCommandExecutor
 			long start = Long.parseLong(tokens[0]);
 			long size = Long.parseLong(tokens[1]);
 
-			_logger.debug(String.format("uploaded part(%d/%d) of file: %s",
+			LOGGER.debug(String.format("uploaded part(%d/%d) of file: %s",
 					index, total, fileName));
 
 			parts.addPart(index, new Part(start, size, uploads
 					.items("upload[]").get(0)));
-			_logger.debug(String.format(">>>>%d", parts._parts.size()));
+			LOGGER.debug(String.format(">>>>%d", parts._parts.size()));
 			if (parts.isReady())
 			{
 				parts.checkParts();
 
-				_logger.debug(String.format("file is uploadded completely: %s",
+				LOGGER.debug(String.format("file is uploadded completely: %s",
 						fileName));
 
 				fw.createAndSave(fileName, parts.openInputStream());
