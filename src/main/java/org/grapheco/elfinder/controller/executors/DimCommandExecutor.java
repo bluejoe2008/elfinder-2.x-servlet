@@ -14,6 +14,8 @@ import org.grapheco.elfinder.controller.executor.AbstractJsonCommandExecutor;
 import org.grapheco.elfinder.controller.executor.CommandExecutor;
 import org.grapheco.elfinder.controller.executor.FsItemEx;
 import org.grapheco.elfinder.service.FsService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This returns the dimensions on an image.
@@ -21,6 +23,8 @@ import org.grapheco.elfinder.service.FsService;
 public class DimCommandExecutor extends AbstractJsonCommandExecutor implements
 		CommandExecutor
 {
+	private static final Logger LOGGER = LoggerFactory.getLogger(DimCommandExecutor.class);
+
 	@Override
 	protected void execute(FsService fsService, HttpServletRequest request,
 			ServletContext servletContext, JSONObject json) throws Exception
@@ -43,13 +47,13 @@ public class DimCommandExecutor extends AbstractJsonCommandExecutor implements
 			{
 				String message = "Failed load image to get dimensions: "
 						+ item.getPath();
-				if (LOG.isDebugEnabled())
+				if (LOGGER.isDebugEnabled())
 				{
-					LOG.debug(message, ioe);
+					LOGGER.debug(message, ioe);
 				}
 				else
 				{
-					LOG.warn(message);
+					LOGGER.warn(message);
 				}
 
 			}
@@ -63,7 +67,7 @@ public class DimCommandExecutor extends AbstractJsonCommandExecutor implements
 					}
 					catch (IOException ioe)
 					{
-						LOG.debug(
+						LOGGER.debug(
 								"Failed to close stream to: " + item.getPath(),
 								ioe);
 					}
@@ -73,7 +77,7 @@ public class DimCommandExecutor extends AbstractJsonCommandExecutor implements
 		}
 		else
 		{
-			LOG.debug("dim command called on non-image: " + item.getPath());
+			LOGGER.debug("dim command called on non-image: " + item.getPath());
 		}
 	}
 }

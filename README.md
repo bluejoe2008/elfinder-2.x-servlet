@@ -26,7 +26,7 @@ use
     <dependency>
         <groupId>org.grapheco</groupId>
         <artifactId>elfinder-servlet-2</artifactId>
-        <version>1.4</version>
+        <version>1.5</version>
         <classifier>classes</classifier>
     </dependency>
 

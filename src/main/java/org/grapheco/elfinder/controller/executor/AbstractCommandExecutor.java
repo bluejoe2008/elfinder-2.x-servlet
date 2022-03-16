@@ -1,5 +1,13 @@
 package org.grapheco.elfinder.controller.executor;
 
+import org.grapheco.elfinder.service.FsItemFilter;
+import org.grapheco.elfinder.service.FsService;
+import org.grapheco.elfinder.util.FsItemFilterUtils;
+import org.grapheco.elfinder.util.FsServiceUtils;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -9,21 +17,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.log4j.Logger;
-
-import org.grapheco.elfinder.service.FsItemFilter;
-import org.grapheco.elfinder.service.FsService;
-import org.grapheco.elfinder.util.FsItemFilterUtils;
-import org.grapheco.elfinder.util.FsServiceUtils;
-
 public abstract class AbstractCommandExecutor implements CommandExecutor
 {
-	protected static Logger LOG = Logger
-			.getLogger(AbstractCommandExecutor.class);
 
 	protected FsItemFilter getRequestedFilter(HttpServletRequest request)
 	{
